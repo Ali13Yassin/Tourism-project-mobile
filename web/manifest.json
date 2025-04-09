@@ -1,6 +1,6 @@
 {
-    "name": "tourism_project_mobile",
-    "short_name": "tourism_project_mobile",
+    "name": "flutter_travel_concept",
+    "short_name": "flutter_travel_concept",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
