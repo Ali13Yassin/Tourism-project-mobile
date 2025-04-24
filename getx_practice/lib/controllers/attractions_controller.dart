@@ -27,18 +27,21 @@ class AttractionsController extends GetxController {
     fetchAttractions();
   }
 
-  Future<void> fetchAttractions() async {
-    try {
-      isLoading(true);
-      final response = await Api.getAttractions();
-      final attractionResponse = AttractionResponse.fromJson(response.data);
-      attractionsList.value = attractionResponse.attractions;
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading(false);
-    }
+Future<void> fetchAttractions() async {
+  try {
+    isLoading(true);
+    final response = await Api.getAttractions();
+    print('Raw API Response: ${response.data}'); // Debugging line to check the raw response
+    final attractionResponse = AttractionResponse.fromJson(response.data);
+    attractionsList.value = attractionResponse.attractions;
+  } catch (e) {
+    Get.snackbar('Error', e.toString());
+    print('Exception: $e');   // Debugging line to check the exception
+  } finally {
+    isLoading(false);
   }
+}
+
 
   void exploreAttraction(String name) {
     Get.snackbar('Explore', 'Exploring $name');

@@ -68,7 +68,7 @@ static void intializeinterceptors() {
 
 
   static Future<Response> getAttractions() async {
-    return dio.get('/api/attractions');
+    return dio.get('/api/get-attractions');
   }
 
 }

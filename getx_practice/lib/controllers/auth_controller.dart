@@ -7,7 +7,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:getx_practice/controllers/base_controller.dart';
 import 'package:getx_practice/models/user.dart';
 import 'package:getx_practice/responses/user_response.dart';
-import 'package:getx_practice/screens/tourists/welcome_screen.dart';
+import 'package:getx_practice/screens/attractions_screen.dart';
+// import 'package:getx_practice/screens/tourists/welcome_screen.dart';
 import 'package:getx_practice/services/api.dart';
 
 class AuthController extends GetxController with BaseController{
@@ -74,7 +75,7 @@ class AuthController extends GetxController with BaseController{
 
         await GetStorage().write('login_token', userResponse.token);
 
-        Get.offAll(() => WelcomeScreen());
+        Get.offAll(() => AttractionsScreen());
       } catch (e) {
         print('Login error: $e');
         GET.Get.snackbar(
