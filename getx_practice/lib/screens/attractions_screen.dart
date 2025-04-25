@@ -58,7 +58,7 @@ class AttractionsScreen extends StatelessWidget {
           height: 280,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images.jpeg'),
+              image: AssetImage('assets/images.jpg'),
               fit: BoxFit.cover,
             ),
           ),
