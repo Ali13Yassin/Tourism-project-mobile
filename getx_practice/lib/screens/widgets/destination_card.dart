@@ -3,81 +3,142 @@ import 'package:flutter/material.dart';
 class DestinationCard extends StatelessWidget {
   final String image;
   final String title;
-  final String? price;
-  final String? type;
+  final String price;
+  final String type;
   final VoidCallback onExplore;
 
   const DestinationCard({
-    Key? key,
+    super.key,
     required this.image,
     required this.title,
-    this.price,
-    this.type,
+    required this.price,
+    required this.type,
     required this.onExplore,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onExplore,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.network(
-                image,
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 120,
-                  color: Colors.grey[300],
-                  child: Icon(Icons.image, color: Colors.grey),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+            child: image.isNotEmpty
+                ? Image.network(
+                    image,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTn_N9oAwlRDE9lUIvjVpcCOXK5ebpB3-20w2J872ETAjZLH5m7ZtWvRl8jU611YQohvFo&usqp=CAU',
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 150,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
-                  if (type != null) ...[
-                    SizedBox(height: 4),
-                    Text(
-                      type!,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  color: Colors.white,
+                  child: Text(
+                    'from $price, 2.day',
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      fontSize: 12,
                     ),
-                  ],
-                  if (price != null) ...[
-                    SizedBox(height: 4),
-                    Text(
-                      price!,
-                      style: TextStyle(fontSize: 14, color: Colors.orange),
+                  ),
+                ),
+                const SizedBox(height: 4),
+
+                Text(
+                  type.toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: onExplore,
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 210, 172, 113), 
+                      foregroundColor: const Color.fromARGB(255, 255, 255, 255), 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
-                  ],
-                ],
-              ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min, 
+                      children: const [
+                        Text('Explore more'),
+                        SizedBox(width: 4), 
+                        Icon(
+                          Icons.arrow_forward, 
+                          size: 16,
+                          color: Colors.white, 
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

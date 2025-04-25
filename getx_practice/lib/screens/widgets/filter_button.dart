@@ -19,7 +19,7 @@ class FilterButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.orange : Colors.white,
+          color: isSelected ? const Color.fromARGB(255, 210, 172, 113) : const Color.fromARGB(255, 232, 232, 232),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey[300]!),
         ),

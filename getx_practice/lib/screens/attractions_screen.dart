@@ -4,7 +4,7 @@ import '../../controllers/attractions_controller.dart';
 import 'widgets/destination_card.dart';
 import 'widgets/experience_item.dart';
 import 'widgets/filter_button.dart';
-
+import 'attraction_details_screen.dart'; 
 class AttractionsScreen extends StatelessWidget {
   const AttractionsScreen({super.key});
 
@@ -103,7 +103,7 @@ class AttractionsScreen extends StatelessWidget {
             ),
             child: const TextField(
               decoration: InputDecoration(
-                icon: Icon(Icons.search, color: Colors.orange),
+                icon: Icon(Icons.search, color:  Color.fromARGB(255, 210, 172, 113)),
                 hintText: 'Where do you wanna go?',
                 border: InputBorder.none,
               ),
@@ -151,45 +151,49 @@ class AttractionsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTopAttractions(AttractionsController controller) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Top Attractions',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          if (controller.attractionsList.isEmpty)
-            Center(
-              child: Column(
-                children: [
-                  const Text('No attractions found'),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => controller.fetchAttractions(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            )
-          else
-            ...controller.attractionsList.map((attraction) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: DestinationCard(
-                image: attraction.image ?? 'https://via.placeholder.com/150',
-                title: attraction.name,
-                price: attraction.price ?? 'Free',
-                type: attraction.type ?? attraction.location ?? 'Unknown',
-                onExplore: () => controller.exploreAttraction(attraction.name),
-              ),
-            )),
-        ],
-      ),
-    );
-  }
+Widget _buildTopAttractions(AttractionsController controller) {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Top Attractions',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        if (controller.attractionsList.isEmpty)
+          Center(
+            child: Column(
+              children: [
+                const Text('No attractions found'),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () => controller.fetchAttractions(),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          )
+        else
+          ...controller.attractionsList.map((attraction) => Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: DestinationCard(
+              image: attraction.image ?? '',
+              title: attraction.name,
+              price: attraction.price ?? 'Free',
+              type: attraction.type ?? attraction.location ?? 'Unknown',
+              onExplore: () {
+                // التنقل إلى شاشة تفاصيل الجذب
+                Get.to(AttractionDetailsScreen(attractionName: attraction.name));
+              },
+            ),
+          )),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildCulturalAttractions(AttractionsController controller) {
     return Padding(
@@ -229,7 +233,7 @@ class AttractionsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final attraction = controller.attractionsList[index];
                 return ExperienceItem(
-                  image: attraction.image ?? 'https://via.placeholder.com/150',
+                  image: attraction.image ?? '',
                   title: attraction.name,
                   date: attraction.date ?? attraction.description ?? 'No description',
                 );
