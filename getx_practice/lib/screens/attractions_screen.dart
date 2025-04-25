@@ -55,7 +55,7 @@ class AttractionsScreen extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          height: 280,
+          height: 250,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images.jpg'),
@@ -92,7 +92,7 @@ class AttractionsScreen extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: 20,
+          bottom: 12,
           left: 16,
           right: 16,
           child: Container(
@@ -115,22 +115,26 @@ class AttractionsScreen extends StatelessWidget {
   }
 
   Widget _buildTravelGuide(AttractionsController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Essential Travel Guide',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'For those seeking a new, responsible way to travel',
-            style: TextStyle(fontSize: 14, color: Colors.black54),
-          ),
-          const SizedBox(height: 12),
-          SingleChildScrollView(
+  return Padding(
+    padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Essential Travel Guide',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'For those seeking a new, responsible way to travel',
+          style: TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        const SizedBox(height: 12),
+
+        // This ensures alignment matches full-width sections like cards
+        SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: List.generate(
@@ -146,10 +150,12 @@ class AttractionsScreen extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
 Widget _buildTopAttractions(AttractionsController controller) {
   return Padding(
@@ -197,7 +203,7 @@ Widget _buildTopAttractions(AttractionsController controller) {
 
   Widget _buildCulturalAttractions(AttractionsController controller) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -205,7 +211,7 @@ Widget _buildTopAttractions(AttractionsController controller) {
             'Cultural Attractions',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height:0),
           if (controller.attractionsList.isEmpty)
             Center(
               child: Column(

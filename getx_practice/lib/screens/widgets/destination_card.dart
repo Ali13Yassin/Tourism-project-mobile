@@ -77,24 +77,14 @@ class DestinationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  color: Colors.white,
-                  child: Text(
-                    'from $price, 2.day',
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
+
                 const SizedBox(height: 4),
 
                 Text(
                   type.toUpperCase(),
                   style: const TextStyle(
                     color: Colors.black54,
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -108,7 +98,18 @@ class DestinationCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
+
+                                Container(
+                  padding: const EdgeInsets.symmetric(),
+                  child: Text(
+                    'From \$$price',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
 
                 Align(
                   alignment: Alignment.centerRight,

@@ -64,7 +64,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'From ${attraction.price}',
+                      'From \$${attraction.price}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -165,7 +165,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
                         'assets/istockphoto-1488375208-612x612.jpg',
-                        height: 150,
+                        height: 200,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
