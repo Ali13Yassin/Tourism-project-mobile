@@ -1,19 +1,25 @@
 class Review {
   final String userName;
   final String comment;
-  final int rating; // Assuming you want to include a rating for the review
+  final int rating;
+  final String createdAt; // New: capture review date
 
   Review({
     required this.userName,
     required this.comment,
-    this.rating = 5, // Default rating of 5 if not provided
+    required this.rating,
+    required this.createdAt,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
-      userName: json['userName'],
+      userName:
+          json['tourist'] != null
+              ? json['tourist']['name'] ?? 'Unknown'
+              : 'Anonymous',
       comment: json['comment'],
-      rating: json['rating'] ?? 5, // Default to 5 if not present
+      rating: json['rating'] ?? 5,
+      createdAt: json['created_at'] ?? '',
     );
   }
 
@@ -22,6 +28,7 @@ class Review {
       'userName': userName,
       'comment': comment,
       'rating': rating,
+      'created_at': createdAt,
     };
   }
 }

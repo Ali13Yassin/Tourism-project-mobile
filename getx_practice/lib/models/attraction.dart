@@ -1,4 +1,4 @@
-import 'review.dart';  // Import the Review class
+import 'review.dart'; // Import updated Review class
 
 class Attraction {
   final int id;
@@ -10,7 +10,6 @@ class Attraction {
   final String? type;
   final String? date;
   List<Review>? reviews;
-
 
   Attraction({
     required this.id,
@@ -34,8 +33,10 @@ class Attraction {
       price: json['price'],
       type: json['type'],
       date: json['date'],
-       reviews: (json['reviews'] as List)?.map((review) => Review.fromJson(review))
-          .toList(),
+      reviews:
+          (json['reviews'] as List?)
+              ?.map((review) => Review.fromJson(review))
+              .toList(),
     );
   }
 
@@ -49,6 +50,7 @@ class Attraction {
       'price': price,
       'type': type,
       'date': date,
+      // Not adding reviews here (usually you send reviews separately)
     };
   }
 }

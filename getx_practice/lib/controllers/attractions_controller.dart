@@ -4,8 +4,12 @@ import '../models/review.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
 
+
+
 class AttractionsController extends GetxController {
   final currentNavIndex = 0.obs;
+  var reviewsList = <Review>[].obs;
+
   void changeNavIndex(int index) {
     currentNavIndex.value = index;
     Get.snackbar('Navigation', 'Selected index: $index');
@@ -28,44 +32,80 @@ class AttractionsController extends GetxController {
     fetchAttractions();
   }
 
-Future<void> fetchAttractions() async {
+  Future<void> fetchAttractions() async {
+    try {
+      isLoading(true);
+      final response = await Api.getAttractions();
+      print(
+        'Raw API Response: ${response.data}',
+      ); // Debugging line to check the raw response
+      final attractionResponse = AttractionResponse.fromJson(response.data);
+      attractionsList.value = attractionResponse.attractions;
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+      print('Exception: $e'); // Debugging line to check the exception
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  void addReview(
+    String attractionName,
+    String comment,
+    String userName, {
+    int rating = 5,
+  }) {
+    final attraction = attractionsList.firstWhere(
+      (element) => element.name == attractionName,
+    );
+
+    attraction.reviews ??= [];
+
+    final newReview = Review(
+      userName: userName,
+      comment: comment,
+      rating: rating,
+      createdAt: DateTime.now().toString(),
+    );
+
+    attraction.reviews?.add(newReview);
+
+    attractionsList.refresh();
+
+    // Optionally send to API
+    // Api.addReview(attraction.id, newReview);
+  }
+    // -------------------------- New function Added --------------------------
+Future<void> fetchReviews(String slug) async {
   try {
-    isLoading(true);
-    final response = await Api.getAttractions();
-    print('Raw API Response: ${response.data}'); // Debugging line to check the raw response
-    final attractionResponse = AttractionResponse.fromJson(response.data);
-    attractionsList.value = attractionResponse.attractions;
+    final response = await Api.getReviews(slug);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = response.data['data']; // Ensure 'data' is the correct key
+
+      if (data.isNotEmpty) {
+        // Update the reviews list with the fetched data
+        final reviews = data.map((e) => Review.fromJson(e)).toList();
+
+        // Here, you can handle the reviews as needed
+        // For example, update the UI or store the reviews in a variable
+        print('Fetched reviews: $reviews');
+      }
+    } else {
+      print('Failed to fetch reviews: ${response.statusCode}');
+    }
   } catch (e) {
-    Get.snackbar('Error', e.toString());
-    print('Exception: $e');   // Debugging line to check the exception
-  } finally {
-    isLoading(false);
+    Get.snackbar('Error', 'Failed to fetch reviews');
+    print('Fetch reviews error: $e');
   }
 }
 
-// Function to add a review (comment) to a specific attraction
-void addReview(String attractionName, String comment, String userName) {
-  // Find the attraction based on the name
-  final attraction = attractionsList.firstWhere((element) => element.name == attractionName);
 
-  // Ensure the reviews list is initialized
-  attraction.reviews ??= [];
-
-  // Create a new Review object
-  final newReview = Review(userName: userName, comment: comment);
-
-  // Add the new review to the attraction's reviews list
-  attraction.reviews?.add(newReview);
-
-  // Update the list to reflect the change
-  attractionsList.refresh(); 
-
-  // Here, you can also send the new review to the API if needed
-  // Example: Api.addReview(attraction.id, newReview);
-}
-
+  // -------------------------- End of New function --------------------------
 
   void exploreAttraction(String name) {
     Get.snackbar('Explore', 'Exploring $name');
   }
+
+
 }
