@@ -8,6 +8,7 @@ import 'attraction_details_screen.dart';
 class AttractionsScreen extends StatelessWidget {
   const AttractionsScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
 

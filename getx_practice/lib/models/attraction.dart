@@ -1,3 +1,5 @@
+import 'review.dart';  // Import the Review class
+
 class Attraction {
   final int id;
   final String name;
@@ -7,6 +9,8 @@ class Attraction {
   final String? price;
   final String? type;
   final String? date;
+  List<Review>? reviews;
+
 
   Attraction({
     required this.id,
@@ -17,6 +21,7 @@ class Attraction {
     this.price,
     this.type,
     this.date,
+    this.reviews,
   });
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
@@ -29,6 +34,8 @@ class Attraction {
       price: json['price'],
       type: json['type'],
       date: json['date'],
+       reviews: (json['reviews'] as List)?.map((review) => Review.fromJson(review))
+          .toList(),
     );
   }
 

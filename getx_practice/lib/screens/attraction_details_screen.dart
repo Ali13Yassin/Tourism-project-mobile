@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/attractions_controller.dart';
 import '../models/attraction.dart';
+import '../models/review.dart';
+import '../../controllers/attractions_controller.dart';
 
 class AttractionDetailsScreen extends StatelessWidget {
   final String attractionName;
+  final TextEditingController reviewController =
+      TextEditingController(); // Controller for the review text field
 
-  const AttractionDetailsScreen({super.key, required this.attractionName});
+  AttractionDetailsScreen({super.key, required this.attractionName});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AttractionsController>();
-    final attraction = controller.attractionsList
-        .firstWhere((element) => element.name == attractionName);
+    final attraction = controller.attractionsList.firstWhere(
+      (element) => element.name == attractionName,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-
           Stack(
             children: [
               ClipRRect(
@@ -31,15 +34,19 @@ class AttractionDetailsScreen extends StatelessWidget {
                   height: 280,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 280,
-                    width: double.infinity,
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Icon(Icons.image_not_supported,
-                          size: 50, color: Colors.grey),
-                    ),
-                  ),
+                  errorBuilder:
+                      (context, error, stackTrace) => Container(
+                        height: 280,
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
                 ),
               ),
               Positioned(
@@ -58,7 +65,10 @@ class AttractionDetailsScreen extends StatelessWidget {
                   bottom: 16,
                   left: 16,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.black54,
                       borderRadius: BorderRadius.circular(8),
@@ -75,8 +85,6 @@ class AttractionDetailsScreen extends StatelessWidget {
                 ),
             ],
           ),
-
-
           Expanded(
             child: Container(
               width: double.infinity,
@@ -92,7 +100,6 @@ class AttractionDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     if (attraction.type != null)
                       Text(
                         attraction.type!,
@@ -102,10 +109,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                           color: Color.fromARGB(255, 210, 172, 113),
                         ),
                       ),
-
                     const SizedBox(height: 6),
-
-
                     Text(
                       attraction.name,
                       style: const TextStyle(
@@ -114,10 +118,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                         color: Colors.black87,
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
-
                     Text(
                       attraction.description ?? 'No description available.',
                       style: const TextStyle(
@@ -126,10 +127,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                         height: 1.5,
                       ),
                     ),
-
                     const SizedBox(height: 20),
-
-
                     if (attraction.location != null)
                       Row(
                         children: [
@@ -146,10 +144,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-
                     const SizedBox(height: 20),
-
-
                     const Text(
                       'Nearby places',
                       style: TextStyle(
@@ -159,8 +154,6 @@ class AttractionDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-
-
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
@@ -170,18 +163,18 @@ class AttractionDetailsScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-
                     const SizedBox(height: 24),
-
-
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 210, 172, 113),
+                          backgroundColor: const Color.fromARGB(
+                            255,
+                            210,
+                            172,
+                            113,
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -192,6 +185,95 @@ class AttractionDetailsScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
+                    ),
+
+                    // Review Section
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Reviews',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Display Reviews List
+                    if (attraction.reviews != null &&
+                        attraction.reviews!.isNotEmpty)
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: attraction.reviews!.length,
+                        itemBuilder: (context, index) {
+                          final review = attraction.reviews![index];
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    review.userName,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    review.comment,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    else
+                      const Text(
+                        'No reviews yet.',
+                        style: TextStyle(fontSize: 14, color: Colors.black54),
+                      ),
+
+                    const SizedBox(height: 20),
+
+                    // Add Review Text Field
+                    TextField(
+                      controller: reviewController,
+                      decoration: const InputDecoration(
+                        hintText: 'Write your review...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Submit Review Button
+                    ElevatedButton(
+                      onPressed: () {
+                        if (reviewController.text.isNotEmpty) {
+                          controller.addReview(
+                            attraction.name,
+                            reviewController.text,
+                            'User', // This can be dynamic, for example, the current user's name
+                          );
+                          reviewController
+                              .clear(); // Clear the text field after submission
+                          Get.snackbar('Success', 'Review added successfully');
+                        } else {
+                          Get.snackbar('Error', 'Please write a review');
+                        }
+                      },
+                      child: const Text('Submit Review'),
                     ),
                   ],
                 ),

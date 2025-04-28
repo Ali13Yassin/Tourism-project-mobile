@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../models/attraction.dart';
+import '../models/review.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
 
@@ -40,6 +41,27 @@ Future<void> fetchAttractions() async {
   } finally {
     isLoading(false);
   }
+}
+
+// Function to add a review (comment) to a specific attraction
+void addReview(String attractionName, String comment, String userName) {
+  // Find the attraction based on the name
+  final attraction = attractionsList.firstWhere((element) => element.name == attractionName);
+
+  // Ensure the reviews list is initialized
+  attraction.reviews ??= [];
+
+  // Create a new Review object
+  final newReview = Review(userName: userName, comment: comment);
+
+  // Add the new review to the attraction's reviews list
+  attraction.reviews?.add(newReview);
+
+  // Update the list to reflect the change
+  attractionsList.refresh(); 
+
+  // Here, you can also send the new review to the API if needed
+  // Example: Api.addReview(attraction.id, newReview);
 }
 
 
