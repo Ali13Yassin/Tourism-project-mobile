@@ -6,8 +6,7 @@ import '../../controllers/attractions_controller.dart';
 
 class AttractionDetailsScreen extends StatelessWidget {
   final String attractionName;
-  final TextEditingController reviewController =
-      TextEditingController(); // Controller for the review text field
+  final TextEditingController reviewController = TextEditingController(); // Controller for the review text field
 
   AttractionDetailsScreen({super.key, required this.attractionName});
 
@@ -169,12 +168,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(
-                            255,
-                            210,
-                            172,
-                            113,
-                          ),
+                          backgroundColor: const Color.fromARGB(255, 210, 172, 113),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -200,8 +194,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     // Display Reviews List
-                    if (attraction.reviews != null &&
-                        attraction.reviews!.isNotEmpty)
+                    if (attraction.reviews != null && attraction.reviews!.isNotEmpty)
                       ListView.builder(
                         shrinkWrap: true,
                         itemCount: attraction.reviews!.length,
@@ -249,7 +242,7 @@ class AttractionDetailsScreen extends StatelessWidget {
 
                     // Add Review Text Field
                     TextField(
-                      controller: reviewController,
+                      controller: reviewController,  // Text field controller
                       decoration: const InputDecoration(
                         hintText: 'Write your review...',
                         border: OutlineInputBorder(),
@@ -266,8 +259,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                             reviewController.text,
                             'User', // This can be dynamic, for example, the current user's name
                           );
-                          reviewController
-                              .clear(); // Clear the text field after submission
+                          reviewController.clear(); // Clear the text field after submission
                           Get.snackbar('Success', 'Review added successfully');
                         } else {
                           Get.snackbar('Error', 'Please write a review');
