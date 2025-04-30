@@ -67,8 +67,8 @@ class Api {
     return dio.get('/api/get-attractions');
   }
 
-  static Future<Response> getReviews(String slug) async {
-    return dio.get('/api/attractions/$slug/reviews');
+  static Future<Response> getReviews(String slug) {
+    return dio.get('/attractions/$slug/reviews');
   }
 
   //NEW METHOD to Submit/Add a Review
