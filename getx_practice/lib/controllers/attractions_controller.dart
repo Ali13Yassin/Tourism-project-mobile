@@ -7,7 +7,7 @@ import '../utils/helpers.dart';
 
 class AttractionsController extends GetxController {
   final currentNavIndex = 0.obs;
-  var reviewsList = <Review>[].obs;
+  RxList<Review> reviewsList = <Review>[].obs;
 
   void changeNavIndex(int index) {
     currentNavIndex.value = index;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../models/review.dart';
 import '../../controllers/attractions_controller.dart';
 import '../../utils/helpers.dart';
 
@@ -250,13 +249,26 @@ class _AttractionDetailsScreenState extends State<AttractionDetailsScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      if (controller.reviewsList.isNotEmpty)
-                        ListView.builder(
+
+                      Obx(() {
+                        final reviews = controller.reviewsList;
+
+                        if (reviews.isEmpty) {
+                          return const Text(
+                            'No reviews yet.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: controller.reviewsList.length,
+                          itemCount: reviews.length,
                           itemBuilder: (context, index) {
-                            final review = controller.reviewsList[index];
+                            final review = reviews[index];
                             return Card(
                               margin: const EdgeInsets.only(bottom: 10),
                               shape: RoundedRectangleBorder(
@@ -288,12 +300,9 @@ class _AttractionDetailsScreenState extends State<AttractionDetailsScreen> {
                               ),
                             );
                           },
-                        )
-                      else
-                        const Text(
-                          'No reviews yet.',
-                          style: TextStyle(fontSize: 14, color: Colors.black54),
-                        ),
+                        );
+                      }),
+
                       const SizedBox(height: 20),
 
                       // Rating Section
