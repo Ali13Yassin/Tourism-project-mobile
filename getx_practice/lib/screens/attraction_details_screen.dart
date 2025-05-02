@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/attractions_controller.dart';
 import '../models/attraction.dart';
+import 'package:getx_practice/screens/booking_details_screen.dart';
 
 class AttractionDetailsScreen extends StatelessWidget {
   final String attractionName;
@@ -178,7 +179,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-
+                            Get.to(() => BookingDetailsScreen(), arguments: {'location': attraction.location});
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 210, 172, 113),
