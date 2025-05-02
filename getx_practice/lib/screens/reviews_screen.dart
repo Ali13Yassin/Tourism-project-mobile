@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:getx_practice/Styles/Colors.dart';
+import '../models/review_model.dart';
+import '../styles/styles.dart';
+
+class ReviewPage extends StatelessWidget {
+  final List<Review> reviews = [
+    Review(
+      name: "Avery",
+      date: "July 2022",
+      rating: 5,
+      comment:
+          "The pyramids are one of the most amazing things I’ve ever seen.",
+      imageUrl: "assets/swagy cat.jpg",
+    ),
+    Review(
+      name: "Eva",
+      date: "June 2022",
+      rating: 5,
+      comment: "This is an experience that everyone should have.",
+      imageUrl: "assets/swagy cat.jpg",
+    ),
+    Review(
+      name: "Leo",
+      date: "June 2022",
+      rating: 4,
+      comment: "The pyramids are a must-visit if you’re in Egypt.",
+      imageUrl: "assets/swagy cat.jpg",
+    ),
+    Review(
+      name: "Emily",
+      date: "2 months ago",
+      rating: 5,
+      comment:
+          "I was so excited to see the pyramids and it didn't disappoint. The tour guide was very informative and made the experience even more memorable.",
+      imageUrl: "assets/swagy cat.jpg",
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        leading: BackButton(color: AppColors.primary),
+        title: Text("Great Pyramid of Giza", style: AppTextStyles.title),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RatingHeader(),
+            SizedBox(height: 20),
+            ...reviews.map((r) => ReviewTile(review: r)).toList(),
+            SizedBox(height: 20),
+            ReviewInput(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.secondary,
+        currentIndex: 0,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.navigation),
+            label: 'Navigate',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.confirmation_number),
+            label: 'Tickets',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner),
+            label: 'Scan',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RatingHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("4.5", style: AppTextStyles.ratingNumber),
+        Row(
+          children: [
+            Icon(Icons.star, color: Colors.amber, size: 20),
+            SizedBox(width: 6),
+            Text("1.2K reviews", style: AppTextStyles.subText),
+          ],
+        ),
+        SizedBox(height: 12),
+        RatingBar(label: "5", percent: 0.70),
+        RatingBar(label: "4", percent: 0.20),
+        RatingBar(label: "3", percent: 0.07),
+        RatingBar(label: "2", percent: 0.02),
+        RatingBar(label: "1", percent: 0.01),
+      ],
+    );
+  }
+}
+
+class RatingBar extends StatelessWidget {
+  final String label;
+  final double percent;
+
+  const RatingBar({required this.label, required this.percent});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: 20, child: Text(label)),
+        SizedBox(width: 6),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: percent,
+            backgroundColor: AppColors.progressBackground,
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            minHeight: 8,
+          ),
+        ),
+        SizedBox(width: 8),
+        Text("${(percent * 100).round()}%"),
+      ],
+    );
+  }
+}
+
+class ReviewTile extends StatelessWidget {
+  final Review review;
+
+  const ReviewTile({required this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundImage: NetworkImage(review.imageUrl),
+            radius: 22,
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(review.name, style: AppTextStyles.reviewName),
+                Text(review.date, style: AppTextStyles.reviewDate),
+                Row(
+                  children: List.generate(5, (index) {
+                    return Icon(
+                      index < review.rating ? Icons.star : Icons.star_border,
+                      size: 16,
+                      color: Colors.amber,
+                    );
+                  }),
+                ),
+                SizedBox(height: 4),
+                Text(review.comment, style: AppTextStyles.reviewComment),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ReviewInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CircleAvatar(
+          backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
+          radius: 20,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: "Write a review...",
+              hintStyle: AppTextStyles.hintText,
+              filled: true,
+              fillColor: AppColors.inputFill,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.emoji_emotions_outlined, color: Colors.grey),
+                  SizedBox(width: 8),
+                  Icon(Icons.send, color: Colors.grey),
+                  SizedBox(width: 8),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
