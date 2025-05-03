@@ -53,15 +53,71 @@ class CartScreen extends StatelessWidget {
                 Text(
                   'Payment Method',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontFamily: 'Serif', // Example font
+                        // fontFamily: 'Serif', // Example font
                       ),
                 ),
                 const SizedBox(height: 15),
                 Row(
                   children: [
-                    Image.asset('assets/images.jpg', height: 30), // Placeholder Visa from assets
-                    const SizedBox(width: 10),
-                    Image.asset('assets/images.jpg', height: 30),
+                    GestureDetector(
+                      onTap: () {
+                        // Show a simple dialog to confirm card selection
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Payment Method"),
+                              content: const Text("You've selected Visa as your payment method."),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text("OK"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        // In a real app, you'd store this selection in state management
+                        // Example: controller.setPaymentMethod('visa');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white, // Change to a highlight color when selected
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/images.jpg', height: 30),
+                            const SizedBox(width: 5),
+                            const Text('Visa'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    GestureDetector(
+                      onTap: () {
+                        // Handle MasterCard selection
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset('assets/images.jpg', height: 30),
+                            const SizedBox(width: 5),
+                            const Text('MasterCard'),
+                          ],
+                        ),
+                      ),
+                    ),
                     ],
                 ),
                 const SizedBox(height: 15),
@@ -192,7 +248,7 @@ class CartScreen extends StatelessWidget {
                   Text(
                     price,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontFamily: 'Serif', // Example font
+                          // fontFamily: 'Serif', // Example font
                           color: Colors.black87,
                         ),
                   ),
