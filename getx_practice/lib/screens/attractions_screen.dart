@@ -8,6 +8,7 @@ import 'widgets/experience_item.dart';
 import 'widgets/filter_button.dart';
 import 'attraction_details_screen.dart';
 import 'widgets/navigation_bar.dart' as custom;
+import 'package:getx_practice/Styles/colors.dart';
 class AttractionsScreen extends StatelessWidget {
   const AttractionsScreen({super.key});
 
@@ -20,7 +21,7 @@ class AttractionsScreen extends StatelessWidget {
     final controller = Get.find<AttractionsController>();
 
 return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: background,
       bottomNavigationBar: custom.NavigationBar(
         currentIndex: controller.currentNavIndex,
         onTap: controller.changeNavIndex,
@@ -58,7 +59,7 @@ return Scaffold(
             child: Row(
                 children: [
                 IconButton(
-                  icon: const Icon(Icons.person, color: Colors.white),
+                  icon:  Icon(Icons.person, color: icons),
                   onPressed: () {
                   Get.to(ProfileScreen());
                   },
@@ -67,20 +68,20 @@ return Scaffold(
             ),
           ),
         ),
-        const Positioned(
+         Positioned(
           left: 16,
           bottom: 90,
           child: Text(
             'Discover Attractions',
-            style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
+            style: TextStyle(color: icons, fontSize: 28, fontWeight: FontWeight.bold),
           ),
         ),
-        const Positioned(
+         Positioned(
           left: 16,
           bottom: 70,
           child: Text(
             'Explore Egypt\'s wonders at your fingertips',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: icons, fontSize: 14),
           ),
         ),
         Positioned(
@@ -90,7 +91,7 @@ return Scaffold(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: icons,
               borderRadius: BorderRadius.circular(30),
             ),
             child: TextField(
@@ -101,7 +102,7 @@ return Scaffold(
                 border: InputBorder.none,
                 suffixIcon: Obx(() => controller.searchQuery.value.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        icon:  Icon(Icons.clear, color: secondary),
                         onPressed: controller.clearSearch,
                       )
                     : const SizedBox.shrink()),
@@ -124,9 +125,9 @@ return Scaffold(
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          const Text(
+           Text(
             'For those seeking a new, responsible way to travel',
-            style: TextStyle(fontSize: 14, color: Colors.black54),
+            style: TextStyle(fontSize: 14, color: primary),
           ),
           const SizedBox(height: 12),
           SizedBox(

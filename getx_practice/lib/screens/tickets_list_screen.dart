@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/ticket_details_screen.dart';
 import '../../controllers/attractions_controller.dart';
-
+import '../Styles/colors.dart';
 // Renamed class to match the file purpose
 class TicketsListScreen extends StatelessWidget {
   TicketsListScreen({super.key});
@@ -16,9 +16,9 @@ class TicketsListScreen extends StatelessWidget {
           () => BottomNavigationBar(
             currentIndex: controller.currentNavIndex.value, // Use controller's value
             onTap: controller.changeNavIndex, // Call controller's method on tap
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.grey,
+            backgroundColor: background,
+            selectedItemColor: primary,
+            unselectedItemColor: progressBackground,
             showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
             items: const [
@@ -89,7 +89,7 @@ class TicketsListScreen extends StatelessWidget {
     required String price,
   }) {
     const buttonColor = Color(0xFFD4B98A); // Beige color for buttons
-    const buttonTextStyle = TextStyle(fontSize: 12, color: Colors.black87);
+    const buttonTextStyle = TextStyle(fontSize: 12, color: Colors.black);
 
     return Card(
       elevation: 2,
@@ -124,7 +124,7 @@ class TicketsListScreen extends StatelessWidget {
                     date, // Display date
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           // fontFamily: 'Serif',
-                          color: Colors.black87,
+                          color: primary,
                         ),
                   ),
                   const SizedBox(height: 5),
@@ -132,7 +132,7 @@ class TicketsListScreen extends StatelessWidget {
                     price,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           // fontFamily: 'Serif',
-                          color: Colors.black87,
+                          color: primary,
                         ),
                   ),
                 ],

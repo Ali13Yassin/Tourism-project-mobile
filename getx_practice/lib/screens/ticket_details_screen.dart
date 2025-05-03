@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
 import '../../controllers/attractions_controller.dart';
+import '../../Styles/colors.dart'; // Import your color styles
 class TicketDetailsScreen extends StatelessWidget {
   const TicketDetailsScreen({super.key});
 
@@ -9,19 +10,19 @@ class TicketDetailsScreen extends StatelessWidget {
     // Define text styles for consistency
     final titleStyle = Theme.of(context).textTheme.headlineMedium?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: primary,
         );
     final subtitleStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
-          color: Colors.black87,
+          color: primary,
         );
     final detailStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Colors.black54,
+          color: primary,
         );
     final controller = Get.find<AttractionsController>(); //Used for navbar
     return Scaffold(
       // Optional: Add an AppBar if needed
       // appBar: AppBar(title: const Text('Ticket Details')),
-      backgroundColor: Colors.white, // Match background if needed
+      backgroundColor: background, // Match background if needed
       body: SafeArea(
         child: Center( // Center the card on the screen
           child: Padding(
@@ -65,7 +66,7 @@ class TicketDetailsScreen extends StatelessWidget {
                       width: 180, // Adjust size as needed
                       height: 180, // Adjust size as needed
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade500, // Grey placeholder color
+                        color: secondary, // Grey placeholder color
                         borderRadius: BorderRadius.circular(12.0), // Rounded corners
                       ),
                       // In a real app, you might display a QR code here
@@ -119,9 +120,9 @@ class TicketDetailsScreen extends StatelessWidget {
           () => BottomNavigationBar(
             currentIndex: controller.currentNavIndex.value, // Use controller's value
             onTap: controller.changeNavIndex, // Call controller's method on tap
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.grey,
+            backgroundColor: background,
+            selectedItemColor: primary,
+            unselectedItemColor: progressBackground,
             showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
             items: const [

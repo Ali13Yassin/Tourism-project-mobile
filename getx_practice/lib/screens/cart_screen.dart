@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:getx_practice/Styles/colors.dart';
+import '../../Styles/colors.dart';
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
@@ -85,9 +86,9 @@ class CartScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: secondary ?? Colors.grey),
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.white, // Change to a highlight color when selected
+                          color: background, // Change to a highlight color when selected
                         ),
                         child: Row(
                           children: [
@@ -106,7 +107,7 @@ class CartScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          border: Border.all(color: secondary ?? Colors.grey),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -123,13 +124,13 @@ class CartScreen extends StatelessWidget {
                 const SizedBox(height: 15),
                 Row(
                   children: [
-                    const Icon(Icons.credit_card, size: 40, color: Colors.grey),
+                    Icon(Icons.credit_card, size: 40, color: secondary ?? Colors.grey),
                     const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children:  [
                         Text('************7890'),
-                        Text('Your card id', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                        Text('Your card id', style: TextStyle(color: secondary ?? Colors.grey, fontSize: 12)),
                       ],
                     )
                   ],
@@ -162,7 +163,7 @@ class CartScreen extends StatelessWidget {
                      ),
                      SizedBox(
                        height: 20,
-                       child: VerticalDivider(color: Colors.grey, thickness: 1),
+                       child: VerticalDivider(color: secondary, thickness: 1),
                      ),
                      Expanded(
                        child: TextField(
@@ -180,7 +181,7 @@ class CartScreen extends StatelessWidget {
                      ),
                    ],
                  ),
-                 const Divider(height: 1, thickness: 1, color: Colors.grey), // Underline for the row
+                  Divider(height: 1, thickness: 1, color: secondary), // Underline for the row
 
 
                 const SizedBox(height: 40), // Spacer before button
@@ -196,9 +197,9 @@ class CartScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
+                    child:  Text(
                       'Pay now',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: icons),
                     ),
                   ),
                 ),
@@ -249,7 +250,7 @@ class CartScreen extends StatelessWidget {
                     price,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           // fontFamily: 'Serif', // Example font
-                          color: Colors.black87,
+                          color: primary,
                         ),
                   ),
                 ],
@@ -283,9 +284,9 @@ class CartScreen extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.black54),
+          border: Border.all(color: primary ?? Colors.black),
         ),
-        child: Icon(icon, size: 18, color: Colors.black87),
+        child: Icon(icon, size: 18, color: primary),
       ),
     );
   }

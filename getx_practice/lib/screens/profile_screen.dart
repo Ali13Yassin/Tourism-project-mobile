@@ -3,7 +3,7 @@ import 'package:getx_practice/models/attraction.dart';
 import 'package:getx_practice/screens/attractions_screen.dart';
 import 'widgets/profile_option.dart';
 import 'package:get/get.dart';
-
+import 'package:getx_practice/Styles/colors.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 5),
                   Text(
                     'TahaYman@gmail.com',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: secondary),
                   ),
                 ],
               ),

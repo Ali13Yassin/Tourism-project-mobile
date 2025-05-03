@@ -4,7 +4,7 @@ import '../../controllers/attractions_controller.dart';
 import '../models/attraction.dart';
 import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
-
+import 'package:getx_practice/Styles/colors.dart';
 class AttractionDetailsScreen extends StatelessWidget {
   final String attractionName;
 
@@ -18,7 +18,7 @@ class AttractionDetailsScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: background,
       body: Column(
         children: [
           Stack(
@@ -37,12 +37,12 @@ class AttractionDetailsScreen extends StatelessWidget {
                       (context, error, stackTrace) => Container(
                         height: 280,
                         width: double.infinity,
-                        color: Colors.grey[300],
-                        child: const Center(
+                        color: progressBackground,
+                        child:  Center(
                           child: Icon(
                             Icons.image_not_supported,
                             size: 50,
-                            color: Colors.grey,
+                            color: secondary,
                           ),
                         ),
                       ),
@@ -52,9 +52,9 @@ class AttractionDetailsScreen extends StatelessWidget {
                 top: MediaQuery.of(context).padding.top + 8,
                 left: 8,
                 child: CircleAvatar(
-                  backgroundColor: Colors.white70,
+                  backgroundColor: icons,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon:  Icon(Icons.arrow_back, color: primary),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -69,13 +69,13 @@ class AttractionDetailsScreen extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.black54,
+                      color: primary,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       'From \$${attraction.price}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style:  TextStyle(
+                        color: icons,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -88,8 +88,8 @@ class AttractionDetailsScreen extends StatelessWidget {
           Expanded(
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration:  BoxDecoration(
+                color: icons,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -114,10 +114,10 @@ class AttractionDetailsScreen extends StatelessWidget {
 
                     Text(
                       attraction.name,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: primary,
                       ),
                     ),
 
@@ -125,9 +125,9 @@ class AttractionDetailsScreen extends StatelessWidget {
 
                     Text(
                       attraction.description ?? 'No description available.',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 14,
-                        color: Colors.black87,
+                        color: primary,
                         height: 1.5,
                       ),
                     ),
@@ -142,9 +142,9 @@ class AttractionDetailsScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               attraction.location!,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 14,
-                                color: Colors.black87,
+                                color: primary,
                               ),
                             ),
                           ),
@@ -153,12 +153,12 @@ class AttractionDetailsScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    const Text(
+                     Text(
                       'Nearby places',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: primary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -194,11 +194,11 @@ class AttractionDetailsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                            child: const Text(
+                            child:  Text(
                               'Book now',
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Colors.white,
+                                color: icons,
                               ),
                             ),
                           ),
@@ -214,11 +214,11 @@ class AttractionDetailsScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                            child: const Text(
+                            child:  Text(
                               'Reviews',
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Colors.white,
+                                color: icons,
                               ),
                             ),
                           ),

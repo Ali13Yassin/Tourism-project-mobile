@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // For date formatting
-
+import 'package:intl/intl.dart'; 
+import 'package:getx_practice/Styles/colors.dart';
 class BookingDetailsController extends GetxController {
   var selectedDate = DateTime.now().obs;
   var tourists = 2.obs;
@@ -78,7 +78,7 @@ class BookingDetailsScreen extends StatelessWidget {
                             colorScheme: const ColorScheme.light(
                               primary: Color.fromARGB(255, 210, 172, 113),
                               onPrimary: Colors.white,
-                            ), dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+                            ), dialogTheme: DialogThemeData(backgroundColor: icons),
                           ),
                           child: child!,
                         );
@@ -89,9 +89,9 @@ class BookingDetailsScreen extends StatelessWidget {
                   child: Obx(() => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                           Text(
                             'Select date',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            style: TextStyle(fontSize: 12, color: secondary),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +100,7 @@ class BookingDetailsScreen extends StatelessWidget {
                                 DateFormat('EEE, MMM d').format(controller.selectedDate.value),
                                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
-                              const Icon(Icons.edit, color: Colors.grey),
+                               Icon(Icons.edit, color: secondary),
                             ],
                           ),
                         ],
@@ -118,9 +118,9 @@ class BookingDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'Guests',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: secondary),
                     ),
                     const SizedBox(height: 8),
                     _buildGuestRow('Tourists', controller.tourists, controller.updateTourists),
@@ -143,9 +143,9 @@ class BookingDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text(
+                child:  Text(
                   'Find',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 18, color: icons),
                 ),
               ),
             ),
@@ -156,9 +156,9 @@ class BookingDetailsScreen extends StatelessWidget {
         () => BottomNavigationBar(
           currentIndex: controller.currentNavIndex.value,
           onTap: controller.changeNavIndex,
-          backgroundColor: Colors.white,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
+          backgroundColor: icons,
+          selectedItemColor: primary,
+          unselectedItemColor: secondary,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
           items: const [
@@ -182,12 +182,12 @@ class BookingDetailsScreen extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.remove_circle_outline, color: Colors.grey),
+                icon:  Icon(Icons.remove_circle_outline, color: secondary),
                 onPressed: () => updateFunction(value.value > 0 ? value.value - 1 : 0),
               ),
               Obx(() => Text('${value.value}')),
               IconButton(
-                icon: const Icon(Icons.add_circle_outline, color: Colors.grey),
+                icon:  Icon(Icons.add_circle_outline, color: secondary),
                 onPressed: () => updateFunction(value.value + 1),
               ),
             ],

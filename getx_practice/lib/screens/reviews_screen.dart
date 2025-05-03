@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import '../../models/review_model.dart';
 import '../../styles/styles.dart';
-
+import 'package:getx_practice/Styles/colors.dart';
 class ReviewPage extends StatelessWidget {
   final List<Review> reviews = [
     Review(
@@ -40,11 +40,11 @@ class ReviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: background,
       appBar: AppBar(
-        leading: BackButton(color: AppColors.primary),
+        leading: BackButton(color: primary),
         title: Text("Giza Pyramid", style: AppTextStyles.title),
-        backgroundColor: AppColors.background,
+        backgroundColor: background,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -104,7 +104,7 @@ class RatingBar extends StatelessWidget {
         Expanded(
           child: LinearProgressIndicator(
             value: percent,
-            backgroundColor: AppColors.progressBackground,
+            backgroundColor: progressBackground,
             valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             minHeight: 8,
           ),
@@ -175,7 +175,7 @@ class ReviewInput extends StatelessWidget {
               hintText: "Write a review...",
               hintStyle: AppTextStyles.hintText,
               filled: true,
-              fillColor: AppColors.inputFill,
+              fillColor: inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25),
                 borderSide: BorderSide.none,
@@ -187,9 +187,9 @@ class ReviewInput extends StatelessWidget {
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.emoji_emotions_outlined, color: Colors.grey),
+                  Icon(Icons.emoji_emotions_outlined, color: secondary),
                   SizedBox(width: 8),
-                  Icon(Icons.send, color: Colors.grey),
+                  Icon(Icons.send, color: secondary),
                   SizedBox(width: 8),
                 ],
               ),
