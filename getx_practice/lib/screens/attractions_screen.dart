@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_practice/screens/cart_screen.dart';
 import '../../controllers/attractions_controller.dart';
 import 'widgets/destination_card.dart';
 import 'widgets/experience_item.dart';
@@ -69,9 +70,19 @@ class AttractionsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Icon(Icons.menu, color: Colors.black),
-                Icon(Icons.person, color: Colors.black),
+                children: [
+                IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.white),
+                  onPressed: () {
+                  
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.person, color: Colors.white),
+                  onPressed: () {
+                  Get.to(CartScreen());
+                  },
+                ),
               ],
             ),
           ),
