@@ -11,21 +11,21 @@ class ReviewPage extends StatelessWidget {
       rating: 5,
       comment:
           "The pyramids are one of the most amazing things I’ve ever seen.",
-      imageUrl: "assets/swagy cat.jpg",
+      imageUrl: "assets/swagy cat.jpeg",
     ),
     Review(
       name: "Eva",
       date: "June 2022",
       rating: 5,
       comment: "This is an experience that everyone should have.",
-      imageUrl: "assets/swagy cat.jpg",
+      imageUrl: "assets/swagy cat.jpeg",
     ),
     Review(
       name: "Leo",
       date: "June 2022",
       rating: 4,
       comment: "The pyramids are a must-visit if you’re in Egypt.",
-      imageUrl: "assets/swagy cat.jpg",
+      imageUrl: "assets/swagy cat.jpeg",
     ),
     Review(
       name: "Emily",
@@ -33,7 +33,7 @@ class ReviewPage extends StatelessWidget {
       rating: 5,
       comment:
           "I was so excited to see the pyramids and it didn't disappoint. The tour guide was very informative and made the experience even more memorable.",
-      imageUrl: "assets/swagy cat.jpg",
+      imageUrl: "assets/swagy cat.jpeg",
     ),
   ];
 
