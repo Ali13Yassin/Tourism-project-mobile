@@ -67,6 +67,7 @@ flutter:
   assets:
     - assets/images.jpg
     - assets/istockphoto-1488375208-612x612.jpg
+    - assets/taha.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

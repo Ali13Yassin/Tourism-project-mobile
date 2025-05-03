@@ -2,16 +2,24 @@ import 'package:get/get.dart';
 import '../models/attraction.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
+import '../screens/cart_screen.dart';
 
 class AttractionsController extends GetxController {
 
-  final currentNavIndex = 0.obs;
-  void changeNavIndex(int index) {
+void changeNavIndex(int index) {
+  if (index == 3) {
+    // Custom behavior when Cart tab is tapped
+    print("Cart tab tapped!");
+    
+    Get.to(() => CartScreen()); // Example navigation
+  } else {
     currentNavIndex.value = index;
-    Get.snackbar('Navigation', 'Selected index: $index');
   }
+}
 
+  
 
+  final currentNavIndex = 0.obs;
   final selectedFilterIndex = 0.obs; 
   final filterOptions = ['All', 'Historical', 'Natural', 'Entertainment'];
 

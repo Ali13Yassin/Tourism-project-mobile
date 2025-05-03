@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/cart_screen.dart';
+import 'package:getx_practice/screens/profile_screen.dart';
 import '../../controllers/attractions_controller.dart';
 import 'widgets/destination_card.dart';
 import 'widgets/experience_item.dart';
@@ -32,7 +33,7 @@ class AttractionsScreen extends StatelessWidget {
               BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
               BottomNavigationBarItem(icon: Icon(Icons.confirmation_num), label: 'Tickets'),
-              BottomNavigationBarItem(icon: Icon(Icons.qr_code_scanner), label: 'Scan'),
+              BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_checkout), label: 'Cart'),
 ],
           )),
       body: Obx(() {
@@ -69,18 +70,11 @@ class AttractionsScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.white),
-                  onPressed: () {
-                  
-                  },
-                ),
                 IconButton(
                   icon: const Icon(Icons.person, color: Colors.white),
                   onPressed: () {
-                  Get.to(CartScreen());
+                  Get.to(ProfileScreen());
                   },
                 ),
               ],
