@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getx_practice/Styles/colors.dart';
-import '../models/review_model.dart';
-import '../styles/styles.dart';
+import '../../models/review_model.dart';
+import '../../styles/styles.dart';
 
 class ReviewPage extends StatelessWidget {
   final List<Review> reviews = [
