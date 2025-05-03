@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart'; // Import GetX
+import '../../controllers/attractions_controller.dart';
 class TicketDetailsScreen extends StatelessWidget {
   const TicketDetailsScreen({super.key});
 
@@ -16,7 +17,7 @@ class TicketDetailsScreen extends StatelessWidget {
     final detailStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: Colors.black54,
         );
-
+    final controller = Get.find<AttractionsController>(); //Used for navbar
     return Scaffold(
       // Optional: Add an AppBar if needed
       // appBar: AppBar(title: const Text('Ticket Details')),
@@ -111,8 +112,26 @@ class TicketDetailsScreen extends StatelessWidget {
             ),
             )
           ),
+        
         ),
       ),
+        bottomNavigationBar: Obx( // Wrap with Obx for reactivity
+          () => BottomNavigationBar(
+            currentIndex: controller.currentNavIndex.value, // Use controller's value
+            onTap: controller.changeNavIndex, // Call controller's method on tap
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+              BottomNavigationBarItem(icon: Icon(Icons.confirmation_num), label: 'Tickets'),
+              BottomNavigationBarItem(icon: Icon(Icons.qr_code_scanner), label: 'Scan'),
+            ],
+          ),
+        ),
     );
   }
 }

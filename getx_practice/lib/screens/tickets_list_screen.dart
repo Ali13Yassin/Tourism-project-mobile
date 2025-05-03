@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:getx_practice/screens/ticket_details_screen.dart';
+import '../../controllers/attractions_controller.dart';
 
 // Renamed class to match the file purpose
 class TicketsListScreen extends StatelessWidget {
-  const TicketsListScreen({super.key});
+  TicketsListScreen({super.key});
+
+  final controller = Get.find<AttractionsController>(); //Used for navbar
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Obx( // Wrap with Obx for reactivity
+          () => BottomNavigationBar(
+            currentIndex: controller.currentNavIndex.value, // Use controller's value
+            onTap: controller.changeNavIndex, // Call controller's method on tap
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+              BottomNavigationBarItem(icon: Icon(Icons.confirmation_num), label: 'Tickets'),
+              BottomNavigationBarItem(icon: Icon(Icons.qr_code_scanner), label: 'Scan'),
+            ],
+          ),
+        ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -120,41 +139,28 @@ class TicketsListScreen extends StatelessWidget {
               ),
             ),
             // Details and Review Buttons
-            Column( // Use Column for vertical button arrangement if needed, Row for side-by-side
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                 MaterialButton(
-                   onPressed: () {
-                    Get.to(TicketDetailsScreen());
-                   },
-                   color: buttonColor,
-                   minWidth: 60, // Adjust width
-                   height: 30, // Adjust height
-                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                   shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(8),
-                   ),
-                   child: const Text('Details', style: buttonTextStyle),
-                 ),
-                 const SizedBox(height: 5), // Space between buttons
-                 MaterialButton(
-                   onPressed: () {
-                    //TODO: open attraction screen
-                   },
-                   color: buttonColor,
-                   minWidth: 60, // Adjust width
-                   height: 30, // Adjust height
-                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                   shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(8),
-                   ),
-                   child: const Text('Review', style: buttonTextStyle),
-                 ),
+                // Details and Review Buttons
+                Column( // Use Column for vertical button arrangement if needed, Row for side-by-side
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {
+                        Get.to(() => TicketDetailsScreen());
+                      },
+                      color: buttonColor,
+                      minWidth: 60, // Adjust width
+                      height: 30, // Adjust height
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text('Details', style: buttonTextStyle),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+          ),
+        );
+      }
+    }
