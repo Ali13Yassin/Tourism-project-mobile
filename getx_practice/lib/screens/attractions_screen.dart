@@ -28,11 +28,11 @@ class AttractionsScreen extends StatelessWidget {
             showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
             items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Navigate'),
+              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Home'),
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
               BottomNavigationBarItem(icon: Icon(Icons.confirmation_num), label: 'Tickets'),
               BottomNavigationBarItem(icon: Icon(Icons.qr_code_scanner), label: 'Scan'),
-            ],
+],
           )),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -44,7 +44,7 @@ class AttractionsScreen extends StatelessWidget {
               _buildHeader(controller),
               _buildTravelGuide(controller),
               _buildTopAttractions(controller),
-              _buildCulturalAttractions(controller),
+              _buildArticles(controller),
             ],
           ),
         );
@@ -210,7 +210,7 @@ class AttractionsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCulturalAttractions(AttractionsController controller) {
+  Widget _buildArticles(AttractionsController controller) {
     final filteredAttractions = controller.filteredAttractions;
 
     return Padding(
@@ -219,11 +219,11 @@ class AttractionsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Cultural Attractions',
+            'Latest Articles',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 0),
-          if (filteredAttractions.isEmpty)
+          if (filteredAttractions.isEmpty) //TODO: Update search
             Center(
               child: Column(
                 children: [

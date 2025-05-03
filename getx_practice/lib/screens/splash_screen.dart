@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children:<Widget> [
-            Text('Masar App',style: TextStyle(fontSize: 25,color: Colors.black),
+            Text('Massar App',style: TextStyle(fontSize: 25,color: Colors.black),
             ),
             SizedBox(height: 20,),
             CircularProgressIndicator()
