@@ -188,17 +188,12 @@ class AttractionDetailsScreen extends StatelessWidget {
                             },
 
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                210,
-                                172,
-                                113,
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+                          backgroundColor: const Color.fromARGB(255, 210, 172, 113),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                             child: const Text(
                               'Book now',
                               style: TextStyle(
@@ -213,17 +208,12 @@ class AttractionDetailsScreen extends StatelessWidget {
                             },
 
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                210,
-                                172,
-                                113,
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+                          backgroundColor: const Color.fromARGB(255, 210, 172, 113),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                             child: const Text(
                               'Reviews',
                               style: TextStyle(
