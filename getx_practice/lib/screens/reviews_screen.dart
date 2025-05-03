@@ -11,21 +11,21 @@ class ReviewPage extends StatelessWidget {
       rating: 5,
       comment:
           "The pyramids are one of the most amazing things I’ve ever seen.",
-      imageUrl: "assets/swagy cat.jpeg",
+      imageUrl: "https://i.pravatar.cc/100?img=1",
     ),
     Review(
       name: "Eva",
       date: "June 2022",
       rating: 5,
       comment: "This is an experience that everyone should have.",
-      imageUrl: "assets/swagy cat.jpeg",
+      imageUrl: "https://i.pravatar.cc/100?img=2",
     ),
     Review(
       name: "Leo",
       date: "June 2022",
       rating: 4,
       comment: "The pyramids are a must-visit if you’re in Egypt.",
-      imageUrl: "assets/swagy cat.jpeg",
+      imageUrl: "https://i.pravatar.cc/100?img=3",
     ),
     Review(
       name: "Emily",
@@ -33,7 +33,7 @@ class ReviewPage extends StatelessWidget {
       rating: 5,
       comment:
           "I was so excited to see the pyramids and it didn't disappoint. The tour guide was very informative and made the experience even more memorable.",
-      imageUrl: "assets/swagy cat.jpeg",
+      imageUrl: "https://i.pravatar.cc/100?img=4",
     ),
   ];
 
@@ -43,7 +43,7 @@ class ReviewPage extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         leading: BackButton(color: AppColors.primary),
-        title: Text("Great Pyramid of Giza", style: AppTextStyles.title),
+        title: Text("Giza Pyramid", style: AppTextStyles.title),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),

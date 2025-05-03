@@ -7,7 +7,7 @@ import 'widgets/destination_card.dart';
 import 'widgets/experience_item.dart';
 import 'widgets/filter_button.dart';
 import 'attraction_details_screen.dart';
-
+import 'widgets/navigation_bar.dart' as custom;
 class AttractionsScreen extends StatelessWidget {
   const AttractionsScreen({super.key});
 
@@ -19,38 +19,24 @@ class AttractionsScreen extends StatelessWidget {
     }
     final controller = Get.find<AttractionsController>();
 
-    return Scaffold(
+return Scaffold(
       backgroundColor: Colors.grey[100],
-      bottomNavigationBar: Obx(() => BottomNavigationBar(
-            currentIndex: controller.currentNavIndex.value,
-            onTap: controller.changeNavIndex,
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: Colors.grey,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-              BottomNavigationBarItem(icon: Icon(Icons.confirmation_num), label: 'Tickets'),
-              BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_checkout), label: 'Cart'),
-],
-          )),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(controller),
-              _buildTravelGuide(controller),
-              _buildTopAttractions(controller),
-              _buildArticles(controller),
-            ],
-          ),
-        );
-      }),
+      bottomNavigationBar: custom.NavigationBar(
+        currentIndex: controller.currentNavIndex,
+        onTap: controller.changeNavIndex,
+      ),
+      body: Obx(() => controller.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(controller),
+                  _buildTravelGuide(controller),
+                  _buildTopAttractions(controller),
+                  _buildArticles(controller),
+                ],
+              ),
+            )),
     );
   }
 
