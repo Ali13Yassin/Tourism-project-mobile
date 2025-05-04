@@ -3,7 +3,8 @@ import '../models/attraction.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
 import '../screens/cart_screen.dart';
-
+import 'package:getx_practice/screens/attractions_screen.dart';
+import '../screens/tickets_list_screen.dart';
 class AttractionsController extends GetxController {
 
 void changeNavIndex(int index) {
@@ -12,7 +13,15 @@ void changeNavIndex(int index) {
     print("Cart tab tapped!");
     
     Get.to(() => CartScreen()); // Example navigation
-  } else {
+  } 
+  else if (index == 2) {
+    
+    Get.to(() => TicketsListScreen()); 
+  } 
+  else if (index == 0) {
+    Get.to(() => AttractionsScreen()); 
+  }
+  else {
     currentNavIndex.value = index;
   }
 }
