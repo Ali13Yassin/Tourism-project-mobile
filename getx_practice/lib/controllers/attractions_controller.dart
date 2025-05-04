@@ -5,37 +5,27 @@ import '../responses/attraction_response.dart';
 import '../screens/cart_screen.dart';
 import 'package:getx_practice/screens/attractions_screen.dart';
 import '../screens/tickets_list_screen.dart';
+
 class AttractionsController extends GetxController {
-
-void changeNavIndex(int index) {
-  if (index == 3) {
-    // Custom behavior when Cart tab is tapped
-    print("Cart tab tapped!");
-    
-    Get.to(() => CartScreen()); // Example navigation
-  } 
-  else if (index == 2) {
-    
-    Get.to(() => TicketsListScreen()); 
-  } 
-  else if (index == 0) {
-    Get.to(() => AttractionsScreen()); 
-  }
-  else {
+  void changeNavIndex(int index) {
     currentNavIndex.value = index;
+    if (index == 3) {
+      Get.to(() => CartScreen()); // Example navigation
+    } else if (index == 2) {
+      Get.to(() => TicketsListScreen());
+    } else if (index == 0) {
+      Get.to(() => AttractionsScreen());
+    } else if (index == 1) {
+      //
+    }
   }
-}
-
-  
 
   final currentNavIndex = 0.obs;
-  final selectedFilterIndex = 0.obs; 
+  final selectedFilterIndex = 0.obs;
   final filterOptions = ['All', 'Historical', 'Natural', 'Entertainment'];
-
 
   var attractionsList = <Attraction>[].obs;
   var isLoading = false.obs;
-
 
   final searchQuery = ''.obs;
 
@@ -44,7 +34,6 @@ void changeNavIndex(int index) {
     super.onInit();
     fetchAttractions();
   }
-
 
   Future<void> fetchAttractions() async {
     try {
@@ -61,45 +50,43 @@ void changeNavIndex(int index) {
     }
   }
 
-
   List<Attraction> get filteredAttractions {
     var filtered = attractionsList.toList();
 
-
-    if (selectedFilterIndex.value != 0) { 
+    if (selectedFilterIndex.value != 0) {
       final selectedCategory = filterOptions[selectedFilterIndex.value];
-      filtered = filtered.where((attraction) => attraction.type == selectedCategory).toList();
+      filtered =
+          filtered
+              .where((attraction) => attraction.type == selectedCategory)
+              .toList();
     }
-
 
     if (searchQuery.value.isNotEmpty) {
       final query = searchQuery.value.toLowerCase();
-      filtered = filtered.where((attraction) {
-        return attraction.name.toLowerCase().contains(query) ||
-               (attraction.location?.toLowerCase().contains(query) ?? false) ||
-               (attraction.description?.toLowerCase().contains(query) ?? false);
-      }).toList();
+      filtered =
+          filtered.where((attraction) {
+            return attraction.name.toLowerCase().contains(query) ||
+                (attraction.location?.toLowerCase().contains(query) ?? false) ||
+                (attraction.description?.toLowerCase().contains(query) ??
+                    false);
+          }).toList();
     }
 
     return filtered;
   }
-
 
   void changeFilter(int index) {
     selectedFilterIndex.value = index;
     Get.snackbar('Filter', 'Selected filter: ${filterOptions[index]}');
   }
 
-
   void updateSearchQuery(String query) {
     searchQuery.value = query;
   }
 
-
   void clearSearch() {
     searchQuery.value = '';
   }
-
 
   void exploreAttraction(String name) {
     Get.snackbar('Explore', 'Exploring $name');
