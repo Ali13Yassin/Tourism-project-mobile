@@ -97,6 +97,7 @@ return Scaffold(
             child: TextField(
               onChanged: controller.updateSearchQuery,
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(top:11.5),
                 icon: const Icon(Icons.search, color: Color.fromARGB(255, 210, 172, 113)),
                 hintText: 'Where do you wanna go?',
                 border: InputBorder.none,
