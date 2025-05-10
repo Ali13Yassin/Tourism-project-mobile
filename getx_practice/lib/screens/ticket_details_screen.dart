@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
-import 'package:qr_flutter/qr_flutter.dart';
+
 import '../../controllers/attractions_controller.dart';
 import '../../Styles/colors.dart'; // Import your color styles
 
@@ -81,13 +81,6 @@ class TicketDetailsScreen extends StatelessWidget {
                         ),
                         // In a real app, you might display a QR code here
                         // child: QrImageView(data: 'Your QR Data'),
-                        child: QrImageView(
-                          data: 'http://127.0.0.1:8000/attractions/giza-pyramids',
-                          version: QrVersions.auto,
-                          size: 200.0,
-                          backgroundColor: Colors.white,
-                          
-                        ),
                       ),
                       const SizedBox(height: 25),
 

@@ -40,8 +40,7 @@ dependencies:
   google_fonts: ^6.2.1
   dio: ^5.8.0+1
   shared_preferences: ^2.5.3
-  qr_flutter: ^4.1.0
-  qr_code_scanner: ^1.0.1
+  mobile_scanner: ^7.0.0
 
 dev_dependencies:
   flutter_test:
