@@ -7,6 +7,8 @@ class Attraction {
   final String? price;
   final String? type;
   final String? date;
+  final String? mapImage;
+
 
   Attraction({
     required this.id,
@@ -17,6 +19,7 @@ class Attraction {
     this.price,
     this.type,
     this.date,
+    this.mapImage,
   });
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
@@ -29,6 +32,7 @@ class Attraction {
       price: json['price'],
       type: json['type'],
       date: json['date'],
+      mapImage: json['map_image'],
     );
   }
 
@@ -42,6 +46,7 @@ class Attraction {
       'price': price,
       'type': type,
       'date': date,
+      'mapImage': mapImage,
     };
   }
 }

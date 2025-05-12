@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
+import 'package:getx_practice/screens/widgets/map_tooltip.dart';
 import '../../controllers/attractions_controller.dart';
 import '../models/attraction.dart';
 import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
+import 'package:getx_practice/utils/location_utils.dart';
+
+
 class AttractionDetailsScreen extends StatelessWidget {
   final String attractionName;
 
@@ -132,29 +137,11 @@ class AttractionDetailsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
 
-                    if (attraction.location != null)
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on, color: Colors.red),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              attraction.location!,
-                              style:  TextStyle(
-                                fontSize: 14,
-                                color: primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    const SizedBox(height: 20),
-
-                     Text(
-                      'Nearby places',
+                    //Location Section
+                    
+                    Text(
+                      'Location',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -163,17 +150,42 @@ class AttractionDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        'assets/istockphoto-1488375208-612x612.jpg',
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                    if (attraction.location != null)
+                      Row(
+                        children: [
+                          const Icon(Icons.location_city, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              attraction.location!,
+                              style:  TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: primary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
 
-                    const SizedBox(height: 24),
+                    if (attraction.mapImage != null)
+                      Builder(
+                        builder: (_) {
+                          final coords = extractLatLngFromUrl(attraction.mapImage!);
+                          if (coords == null) return const SizedBox.shrink();
+
+                          return MapWithTooltip(
+                            coords: coords,
+                            attractionName: attraction.name,
+                            mapImageUrl: attraction.mapImage!,
+                            primary: primary ?? Colors.blue,
+                            icons: icons ?? Colors.grey,
+                            onTap: (url) => openInGoogleMaps(url),
+                          );
+                        },
+                      ),
+
+                    
 
                     SizedBox(
                       width: double.infinity,
@@ -222,6 +234,10 @@ class AttractionDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          
+                          
+                          
+
                         ],
                       ),
                     ),

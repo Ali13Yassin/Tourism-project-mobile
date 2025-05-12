@@ -23,6 +23,7 @@ class AttractionResponse {
         price: item['price']?.toString(),
         type: item['category'],
         date: item['duration'],
+        mapImage: item['mapImage'],
       );
     }).toList();
   }
