@@ -71,4 +71,8 @@ static void intializeinterceptors() {
     return dio.get('/api/get-attractions');
   }
 
+  static Future<Response> getAttractionReviews(String slug) async {
+    return dio.get('/api/attractions/$slug/reviews');
+  }
+
 }

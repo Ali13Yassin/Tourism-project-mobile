@@ -1,202 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:getx_practice/Styles/colors.dart';
-import '../../models/review_model.dart';
-import '../../styles/styles.dart';
-import 'package:getx_practice/Styles/colors.dart';
-class ReviewPage extends StatelessWidget {
-  final List<Review> reviews = [
-    Review(
-      name: "Avery",
-      date: "July 2022",
-      rating: 5,
-      comment:
-          "The pyramids are one of the most amazing things I’ve ever seen.",
-      imageUrl: "https://i.pravatar.cc/100?img=1",
-    ),
-    Review(
-      name: "Eva",
-      date: "June 2022",
-      rating: 5,
-      comment: "This is an experience that everyone should have.",
-      imageUrl: "https://i.pravatar.cc/100?img=2",
-    ),
-    Review(
-      name: "Leo",
-      date: "June 2022",
-      rating: 4,
-      comment: "The pyramids are a must-visit if you’re in Egypt.",
-      imageUrl: "https://i.pravatar.cc/100?img=3",
-    ),
-    Review(
-      name: "Emily",
-      date: "2 months ago",
-      rating: 5,
-      comment:
-          "I was so excited to see the pyramids and it didn't disappoint. The tour guide was very informative and made the experience even more memorable.",
-      imageUrl: "https://i.pravatar.cc/100?img=4",
-    ),
-  ];
+import 'package:get/get.dart';
+import '../controllers/review_controller.dart';
+import '../models/review_model.dart';
+
+class ReviewsScreen extends StatefulWidget {
+  final String slug;
+  const ReviewsScreen({required this.slug});
+
+  @override
+  State<ReviewsScreen> createState() => _ReviewsScreenState();
+}
+
+class _ReviewsScreenState extends State<ReviewsScreen> {
+  final ReviewController controller = Get.put(ReviewController());
+  final TextEditingController _commentController = TextEditingController();
+  int _selectedRating = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchReviews(widget.slug);
+  }
+
+  void _submitReview() {
+    final comment = _commentController.text.trim();
+    if (comment.isNotEmpty) {
+      controller.submitReview(widget.slug, _selectedRating, comment);
+      _commentController.clear();
+      setState(() => _selectedRating = 5);
+    } else {
+      Get.snackbar('Error', 'Please write a comment before submitting.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
       appBar: AppBar(
-        leading: BackButton(color: primary),
-        title: Text("Giza Pyramid", style: AppTextStyles.title),
-        backgroundColor: background,
-        elevation: 0,
+        title: Obx(() => Text(
+          controller.attractionName.value.isNotEmpty
+              ? controller.attractionName.value
+              : 'Reviews',
+        )),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return Column(
           children: [
-            RatingHeader(),
-            SizedBox(height: 20),
-            ...reviews.map((r) => ReviewTile(review: r)).toList(),
-            SizedBox(height: 20),
-            ReviewInput(),
+            Expanded(
+              child: controller.reviews.isEmpty
+                  ? const Center(child: Text('No reviews yet. Be the first!'))
+                  : ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: controller.reviews.length,
+                      separatorBuilder: (_, __) => const Divider(height: 32),
+                      itemBuilder: (context, index) {
+                        return _ReviewTile(review: controller.reviews[index]);
+                      },
+                    ),
+            ),
+            const Divider(height: 1),
+            _ReviewForm(
+              selectedRating: _selectedRating,
+              onRatingChanged: (rating) {
+                setState(() => _selectedRating = rating);
+              },
+              commentController: _commentController,
+              onSubmit: _submitReview,
+            ),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 }
+class _ReviewTile extends StatelessWidget {
+  final Review review;
 
-class RatingHeader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("4.5", style: AppTextStyles.ratingNumber),
-        Row(
-          children: [
-            Icon(Icons.star, color: Colors.amber, size: 20),
-            SizedBox(width: 6),
-            Text("1.2K reviews", style: AppTextStyles.subText),
-          ],
-        ),
-        SizedBox(height: 12),
-        RatingBar(label: "5", percent: 0.70),
-        RatingBar(label: "4", percent: 0.20),
-        RatingBar(label: "3", percent: 0.07),
-        RatingBar(label: "2", percent: 0.02),
-        RatingBar(label: "1", percent: 0.01),
-      ],
-    );
-  }
-}
-
-class RatingBar extends StatelessWidget {
-  final String label;
-  final double percent;
-
-  const RatingBar({required this.label, required this.percent});
+  const _ReviewTile({required this.review});
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 20, child: Text(label)),
-        SizedBox(width: 6),
-        Expanded(
-          child: LinearProgressIndicator(
-            value: percent,
-            backgroundColor: progressBackground,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            minHeight: 8,
+        CircleAvatar(
+          radius: 22,
+          backgroundColor: Colors.blueGrey[200],
+          child: Text(
+            review.name?.substring(0, 1).toUpperCase() ?? '?',
+            style: const TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
-        SizedBox(width: 8),
-        Text("${(percent * 100).round()}%"),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                review.name ?? 'Anonymous',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: List.generate(5, (index) {
+                  return Icon(
+                    index < review.rating ? Icons.star : Icons.star_border,
+                    size: 18,
+                    color: Colors.amber,
+                  );
+                }),
+              ),
+              const SizedBox(height: 6),
+              Text(review.comment),
+              const SizedBox(height: 4),
+              Text(
+                review.createdAt,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 }
 
-class ReviewTile extends StatelessWidget {
-  final Review review;
+class _ReviewForm extends StatelessWidget {
+  final int selectedRating;
+  final Function(int) onRatingChanged;
+  final TextEditingController commentController;
+  final VoidCallback onSubmit;
 
-  const ReviewTile({required this.review});
+  const _ReviewForm({
+    required this.selectedRating,
+    required this.onRatingChanged,
+    required this.commentController,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(0, -1),
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(review.imageUrl),
-            radius: 22,
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(review.name, style: AppTextStyles.reviewName),
-                Text(review.date, style: AppTextStyles.reviewDate),
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      index < review.rating ? Icons.star : Icons.star_border,
-                      size: 16,
-                      color: Colors.amber,
-                    );
-                  }),
+          const Text("Leave a Review", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(5, (index) {
+              return IconButton(
+                onPressed: () => onRatingChanged(index + 1),
+                icon: Icon(
+                  index < selectedRating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
                 ),
-                SizedBox(height: 4),
-                Text(review.comment, style: AppTextStyles.reviewComment),
-              ],
+              );
+            }),
+          ),
+          TextField(
+            controller: commentController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: "Write your review...",
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
             ),
           ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton.icon(
+              onPressed: onSubmit,
+              icon: const Icon(Icons.send),
+              label: const Text("Submit"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 }
 
-class ReviewInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundImage: NetworkImage("https://i.pravatar.cc/100"),
-          radius: 20,
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: "Write a review...",
-              hintStyle: AppTextStyles.hintText,
-              filled: true,
-              fillColor: inputFill,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-              suffixIcon: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.emoji_emotions_outlined, color: secondary),
-                  SizedBox(width: 8),
-                  Icon(Icons.send, color: secondary),
-                  SizedBox(width: 8),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}

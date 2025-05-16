@@ -8,6 +8,7 @@ import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import 'package:getx_practice/utils/location_utils.dart';
+import 'package:getx_practice/utils/slugify.dart';
 
 
 class AttractionDetailsScreen extends StatelessWidget {
@@ -216,17 +217,17 @@ class AttractionDetailsScreen extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Get.to(() => ReviewPage());
+                              final slug = slugify(attraction.name);
+                              Get.to(() => ReviewsScreen(slug: slug));
                             },
-
                             style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 210, 172, 113),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                            child:  Text(
+                              backgroundColor: const Color.fromARGB(255, 210, 172, 113),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
                               'Reviews',
                               style: TextStyle(
                                 fontSize: 18,
@@ -234,9 +235,6 @@ class AttractionDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          
-                          
-                          
 
                         ],
                       ),
