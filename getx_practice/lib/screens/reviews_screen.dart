@@ -36,14 +36,17 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: Obx(
-          () => Text(
-            controller.attractionName.value.isNotEmpty
-                ? controller.attractionName.value
-                : 'Reviews',
-          ),
-        ),
+        backgroundColor: Colors.white,
+        elevation: 0.5,
+        title: Obx(() => Text(
+              controller.attractionName.value.isNotEmpty
+                  ? controller.attractionName.value
+                  : 'Reviews',
+              style: const TextStyle(color: Colors.black),
+            )),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -54,13 +57,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           children: [
             Expanded(
               child: controller.reviews.isEmpty
-                  ? const Center(
-                      child: Text('No reviews yet. Be the first!'),
-                    )
+                  ? const Center(child: Text('No reviews yet. Be the first!'))
                   : ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: controller.reviews.length,
-                      separatorBuilder: (_, __) => const Divider(height: 32),
+                      separatorBuilder: (_, __) => const SizedBox(height: 16),
                       itemBuilder: (context, index) {
                         return _ReviewTile(review: controller.reviews[index]);
                       },
@@ -89,73 +90,63 @@ class _ReviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 4,
-                offset: Offset(0, 2),
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.blueGrey[200],
+              child: Text(
+                review.name?.substring(0, 1).toUpperCase() ?? '?',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
-            ],
-          ),
-          child: CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.blueGrey[300],
-            child: Text(
-              review.name?.substring(0, 1).toUpperCase() ?? '?',
-              style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
-          ),
-        ),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     review.name ?? 'Anonymous',
                     style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(height: 4),
                   Text(
                     review.createdAt,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: List.generate(5, (index) {
+                      return Icon(
+                        index < review.rating
+                            ? Icons.star
+                            : Icons.star_border,
+                        size: 18,
+                        color: Colors.amber,
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    review.comment,
+                    style: const TextStyle(fontSize: 14, height: 1.4),
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
-              Row(
-                children: List.generate(5, (index) {
-                  return Icon(
-                    index < review.rating ? Icons.star : Icons.star_border,
-                    size: 18,
-                    color: Colors.amber,
-                  );
-                }),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                review.comment,
-                style: const TextStyle(fontSize: 14, height: 1.4),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -176,27 +167,14 @@ class _ReviewForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            offset: Offset(0, -2),
-            blurRadius: 10,
-          ),
-        ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Write a review",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            "Leave a Review",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -204,42 +182,43 @@ class _ReviewForm extends StatelessWidget {
               return IconButton(
                 onPressed: () => onRatingChanged(index + 1),
                 icon: Icon(
-                  index < selectedRating ? Icons.star : Icons.star_border,
+                  index < selectedRating
+                      ? Icons.star
+                      : Icons.star_border,
                   color: Colors.amber,
                 ),
-                iconSize: 28,
-                splashRadius: 20,
               );
             }),
           ),
+          const SizedBox(height: 4),
           TextField(
             controller: commentController,
             maxLines: 3,
             decoration: InputDecoration(
               hintText: "Write your review...",
               filled: true,
-              fillColor: Colors.grey[100],
+              fillColor: const Color(0xFFF1F3F4),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton.icon(
               onPressed: onSubmit,
-              icon: const Icon(Icons.send, size: 18),
+              icon: const Icon(Icons.send),
               label: const Text("Submit"),
               style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 backgroundColor: Colors.blueAccent,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),
