@@ -38,10 +38,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Obx(() => Text(
-          controller.attractionName.value.isNotEmpty
-              ? controller.attractionName.value
-              : 'Reviews',
-        )),
+              controller.attractionName.value.isNotEmpty
+                  ? controller.attractionName.value
+                  : 'Reviews',
+              style: const TextStyle(fontFamily: 'Georgia'),
+            )),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -52,7 +53,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           children: [
             Expanded(
               child: controller.reviews.isEmpty
-                  ? const Center(child: Text('No reviews yet. Be the first!'))
+                  ? const Center(
+                      child: Text(
+                        'No reviews yet. Be the first!',
+                        style: TextStyle(fontFamily: 'Georgia'),
+                      ),
+                    )
                   : ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: controller.reviews.length,
@@ -77,6 +83,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 }
+
 class _ReviewTile extends StatelessWidget {
   final Review review;
 
@@ -103,26 +110,38 @@ class _ReviewTile extends StatelessWidget {
               Text(
                 review.name ?? 'Anonymous',
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   fontSize: 16,
+                  fontFamily: 'Georgia',
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
+              Text(
+                review.createdAt,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  fontFamily: 'Georgia',
+                ),
+              ),
+              const SizedBox(height: 6),
               Row(
                 children: List.generate(5, (index) {
                   return Icon(
                     index < review.rating ? Icons.star : Icons.star_border,
-                    size: 18,
+                    size: 20,
                     color: Colors.amber,
                   );
                 }),
               ),
               const SizedBox(height: 6),
-              Text(review.comment),
-              const SizedBox(height: 4),
               Text(
-                review.createdAt,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                review.comment,
+                style: const TextStyle(
+                  fontSize: 15,
+                  height: 1.4,
+                  fontFamily: 'Georgia',
+                ),
               ),
             ],
           ),
@@ -162,7 +181,14 @@ class _ReviewForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Leave a Review", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text(
+            "Leave a Review",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Georgia',
+            ),
+          ),
           const SizedBox(height: 8),
           Row(
             children: List.generate(5, (index) {
@@ -179,15 +205,18 @@ class _ReviewForm extends StatelessWidget {
             controller: commentController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: "Write your review...",
+              hintText: "Write a review...",
+              hintStyle: const TextStyle(fontFamily: 'Georgia'),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: BorderSide.none,
               ),
             ),
+            style: const TextStyle(fontFamily: 'Georgia'),
           ),
           const SizedBox(height: 8),
           Align(
@@ -198,6 +227,7 @@ class _ReviewForm extends StatelessWidget {
               label: const Text("Submit"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
+                textStyle: const TextStyle(fontFamily: 'Georgia'),
               ),
             ),
           )
@@ -206,4 +236,3 @@ class _ReviewForm extends StatelessWidget {
     );
   }
 }
-
