@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_practice/controllers/auth_controller.dart';
-// import 'package:getx_practice/screens/splash_screen.dart';
 import 'package:getx_practice/screens/tourists/auth/login_screen.dart';
 import 'package:getx_practice/services/api.dart';
 

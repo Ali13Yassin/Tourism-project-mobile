@@ -1,15 +1,28 @@
 class Review {
-  final String name;
-  final String date;
+  final int id;
   final int rating;
   final String comment;
-  final String imageUrl;
+  final String? name;
+  final String? email;
+  final String createdAt;
 
   Review({
-    required this.name,
-    required this.date,
+    required this.id,
     required this.rating,
     required this.comment,
-    required this.imageUrl,
+    this.name,
+    this.email,
+    required this.createdAt,
   });
+
+  factory Review.fromJson(Map<String, dynamic> json) {
+    return Review(
+      id: json['id'],
+      rating: json['rating'],
+      comment: json['comment'],
+      name: json['tourist']?['name'],
+      email: json['tourist']?['email'],
+      createdAt: json['created_at'],
+    );
+  }
 }

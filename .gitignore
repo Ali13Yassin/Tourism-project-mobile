@@ -1,0 +1,10 @@
+*.cmake
+*.swift
+*.h
+*.cc
+getx_practice/linux/flutter/generated_plugin_registrant.cc
+getx_practice/linux/flutter/generated_plugin_registrant.h
+getx_practice/linux/flutter/generated_plugins.cmake
+getx_practice/macos/Flutter/GeneratedPluginRegistrant.swift
+getx_practice/windows/flutter/generated_plugin_registrant.cc
+getx_practice/windows/flutter/generated_plugin_registrant.h

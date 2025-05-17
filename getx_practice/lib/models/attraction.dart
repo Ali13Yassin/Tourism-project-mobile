@@ -1,5 +1,3 @@
-import 'review.dart'; // Import updated Review class
-
 class Attraction {
   final int id;
   final String name;
@@ -9,7 +7,8 @@ class Attraction {
   final String? price;
   final String? type;
   final String? date;
-  List<Review>? reviews;
+  final String? mapImage;
+
 
   Attraction({
     required this.id,
@@ -20,7 +19,7 @@ class Attraction {
     this.price,
     this.type,
     this.date,
-    this.reviews,
+    this.mapImage,
   });
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
@@ -33,10 +32,7 @@ class Attraction {
       price: json['price'],
       type: json['type'],
       date: json['date'],
-      reviews:
-          (json['reviews'] as List?)
-              ?.map((review) => Review.fromJson(review))
-              .toList(),
+      mapImage: json['map_image'],
     );
   }
 
@@ -50,7 +46,7 @@ class Attraction {
       'price': price,
       'type': type,
       'date': date,
-      // Not adding reviews here (usually you send reviews separately)
+      'mapImage': mapImage,
     };
   }
 }

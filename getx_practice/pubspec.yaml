@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rating_bar: ^4.0.0
+  intl: ^0.17.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,19 +40,21 @@ dependencies:
   google_fonts: ^6.2.1
   dio: ^5.8.0+1
   shared_preferences: ^2.5.3
-  intl: ^0.20.2
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  url_launcher: ^6.3.1
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -69,7 +71,8 @@ flutter:
   assets:
     - assets/images.jpg
     - assets/istockphoto-1488375208-612x612.jpg
-    - assets/swagy cat.jpg
+    - assets/taha.jpg
+    - assets/swagy cat.jpeg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

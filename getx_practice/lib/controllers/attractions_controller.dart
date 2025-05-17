@@ -1,29 +1,33 @@
 import 'package:get/get.dart';
 import '../models/attraction.dart';
-import '../models/review.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
-import '../utils/helpers.dart';
+import '../screens/cart_screen.dart';
+import 'package:getx_practice/screens/attractions_screen.dart';
+import '../screens/tickets_list_screen.dart';
 
 class AttractionsController extends GetxController {
-  final currentNavIndex = 0.obs;
-  RxList<Review> reviewsList = <Review>[].obs;
-
   void changeNavIndex(int index) {
     currentNavIndex.value = index;
-    Get.snackbar('Navigation', 'Selected index: $index');
+    if (index == 3) {
+      Get.to(() => CartScreen()); // Example navigation
+    } else if (index == 2) {
+      Get.to(() => TicketsListScreen());
+    } else if (index == 0) {
+      Get.to(() => AttractionsScreen());
+    } else if (index == 1) {
+      //
+    }
   }
 
-  final selectedFilterIndex = 1.obs;
-  void changeFilter(int index) {
-    selectedFilterIndex.value = index;
-    Get.snackbar('Filter', 'Selected filter: ${filterOptions[index]}');
-  }
-
-  final filterOptions = ['Museums', 'Historical Sites', 'Beaches'];
+  final currentNavIndex = 0.obs;
+  final selectedFilterIndex = 0.obs;
+  final filterOptions = ['All', 'Historical', 'Natural', 'Entertainment'];
 
   var attractionsList = <Attraction>[].obs;
   var isLoading = false.obs;
+
+  final searchQuery = ''.obs;
 
   @override
   void onInit() {
@@ -35,77 +39,56 @@ class AttractionsController extends GetxController {
     try {
       isLoading(true);
       final response = await Api.getAttractions();
-      print(
-        'Raw API Response: ${response.data}',
-      ); // Debugging line to check the raw response
+      print('Raw API Response: ${response.data}');
       final attractionResponse = AttractionResponse.fromJson(response.data);
       attractionsList.value = attractionResponse.attractions;
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      print('Exception: $e'); // Debugging line to check the exception
+      print('Exception: $e');
     } finally {
       isLoading(false);
     }
   }
 
-  void addReview(
-    String attractionName,
-    String comment,
-    String userName, {
-    int rating = 5,
-  }) {
-    final attraction = attractionsList.firstWhere(
-      (element) => element.name == attractionName,
-    );
+  List<Attraction> get filteredAttractions {
+    var filtered = attractionsList.toList();
 
-    attraction.reviews ??= [];
-
-    final newReview = Review(
-      userName: userName,
-      comment: comment,
-      rating: rating,
-      createdAt: DateTime.now().toString(),
-    );
-
-    attraction.reviews?.add(newReview);
-
-    attractionsList.refresh();
-
-    // Optionally send to API
-    // Api.addReview(attraction.id, newReview);
-  }
-
-  // -------------------------- New function Added --------------------------
-  Future<void> fetchReviews(String slug) async {
-    try {
-      final response = await Api.getReviews(slug);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data =
-            response.data['data']; // Ensure 'data' is the correct key
-
-        if (data.isNotEmpty) {
-          // Update the reviews list with the fetched data
-          final reviews = data.map((e) => Review.fromJson(e)).toList();
-
-          // Here, you can handle the reviews as needed
-          // For example, update the UI or store the reviews in a variable
-          print('Fetched reviews: $reviews');
-        }
-      } else {
-        print('Failed to fetch reviews: ${response.statusCode}');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch reviews');
-      print('Fetch reviews error: $e');
+    if (selectedFilterIndex.value != 0) {
+      final selectedCategory = filterOptions[selectedFilterIndex.value];
+      filtered =
+          filtered
+              .where((attraction) => attraction.type == selectedCategory)
+              .toList();
     }
+
+    if (searchQuery.value.isNotEmpty) {
+      final query = searchQuery.value.toLowerCase();
+      filtered =
+          filtered.where((attraction) {
+            return attraction.name.toLowerCase().contains(query) ||
+                (attraction.location?.toLowerCase().contains(query) ?? false) ||
+                (attraction.description?.toLowerCase().contains(query) ??
+                    false);
+          }).toList();
+    }
+
+    return filtered;
   }
 
-  // -------------------------- End of New function --------------------------
+  void changeFilter(int index) {
+    selectedFilterIndex.value = index;
+    Get.snackbar('Filter', 'Selected filter: ${filterOptions[index]}');
+  }
+
+  void updateSearchQuery(String query) {
+    searchQuery.value = query;
+  }
+
+  void clearSearch() {
+    searchQuery.value = '';
+  }
 
   void exploreAttraction(String name) {
-    final slug = slugify(name);
-    fetchReviews(slug);
     Get.snackbar('Explore', 'Exploring $name');
   }
 }
