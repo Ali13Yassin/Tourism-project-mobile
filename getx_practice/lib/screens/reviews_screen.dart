@@ -37,12 +37,13 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(
-              controller.attractionName.value.isNotEmpty
-                  ? controller.attractionName.value
-                  : 'Reviews',
-              style: const TextStyle(fontFamily: 'Georgia'),
-            )),
+        title: Obx(
+          () => Text(
+            controller.attractionName.value.isNotEmpty
+                ? controller.attractionName.value
+                : 'Reviews',
+          ),
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -52,21 +53,19 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         return Column(
           children: [
             Expanded(
-              child: controller.reviews.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No reviews yet. Be the first!',
-                        style: TextStyle(fontFamily: 'Georgia'),
+              child:
+                  controller.reviews.isEmpty
+                      ? const Center(
+                        child: Text('No reviews yet. Be the first!'),
+                      )
+                      : ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: controller.reviews.length,
+                        separatorBuilder: (_, __) => const Divider(height: 32),
+                        itemBuilder: (context, index) {
+                          return _ReviewTile(review: controller.reviews[index]);
+                        },
                       ),
-                    )
-                  : ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: controller.reviews.length,
-                      separatorBuilder: (_, __) => const Divider(height: 32),
-                      itemBuilder: (context, index) {
-                        return _ReviewTile(review: controller.reviews[index]);
-                      },
-                    ),
             ),
             const Divider(height: 1),
             _ReviewForm(
@@ -110,38 +109,26 @@ class _ReviewTile extends StatelessWidget {
               Text(
                 review.name ?? 'Anonymous',
                 style: const TextStyle(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'Georgia',
                 ),
               ),
-              const SizedBox(height: 2),
-              Text(
-                review.createdAt,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey,
-                  fontFamily: 'Georgia',
-                ),
-              ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Row(
                 children: List.generate(5, (index) {
                   return Icon(
                     index < review.rating ? Icons.star : Icons.star_border,
-                    size: 20,
+                    size: 18,
                     color: Colors.amber,
                   );
                 }),
               ),
               const SizedBox(height: 6),
+              Text(review.comment),
+              const SizedBox(height: 4),
               Text(
-                review.comment,
-                style: const TextStyle(
-                  fontSize: 15,
-                  height: 1.4,
-                  fontFamily: 'Georgia',
-                ),
+                review.createdAt,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -183,11 +170,7 @@ class _ReviewForm extends StatelessWidget {
         children: [
           const Text(
             "Leave a Review",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Georgia',
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -205,18 +188,18 @@ class _ReviewForm extends StatelessWidget {
             controller: commentController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: "Write a review...",
-              hintStyle: const TextStyle(fontFamily: 'Georgia'),
+              hintText: "Write your review...",
               filled: true,
               fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide.none,
               ),
             ),
-            style: const TextStyle(fontFamily: 'Georgia'),
           ),
           const SizedBox(height: 8),
           Align(
@@ -227,10 +210,9 @@ class _ReviewForm extends StatelessWidget {
               label: const Text("Submit"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
-                textStyle: const TextStyle(fontFamily: 'Georgia'),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
