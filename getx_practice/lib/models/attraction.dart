@@ -8,6 +8,7 @@ class Attraction {
   final String? type;
   final String? date;
   final String? mapImage;
+  final List<String>? gallery;
 
 
   Attraction({
@@ -20,6 +21,7 @@ class Attraction {
     this.type,
     this.date,
     this.mapImage,
+    this.gallery,
   });
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class Attraction {
       type: json['type'],
       date: json['date'],
       mapImage: json['map_image'],
+      gallery: (json['gallery'] as List?)?.map((e) => e.toString()).toList(),
     );
   }
 
@@ -47,6 +50,7 @@ class Attraction {
       'type': type,
       'date': date,
       'mapImage': mapImage,
+      'gallery': gallery,
     };
   }
 }

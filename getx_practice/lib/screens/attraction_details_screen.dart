@@ -9,6 +9,7 @@ import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import 'package:getx_practice/utils/location_utils.dart';
 import 'package:getx_practice/utils/slugify.dart';
+import 'package:getx_practice/screens/widgets/image_gallery_slider.dart';
 
 
 class AttractionDetailsScreen extends StatelessWidget {
@@ -29,30 +30,12 @@ class AttractionDetailsScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                child: Image.network(
-                  attraction.image ?? '',
-                  height: 280,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) => Container(
-                        height: 280,
-                        width: double.infinity,
-                        color: progressBackground,
-                        child:  Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            size: 50,
-                            color: secondary,
-                          ),
-                        ),
-                      ),
-                ),
+              ImageGallerySlider(
+                imageUrls: (attraction.gallery != null && attraction.gallery!.isNotEmpty)
+                    ? attraction.gallery!
+                    : (attraction.image != null ? [attraction.image!] : []),
+                height: 280,
+                borderRadius: 20,
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,

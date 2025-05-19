@@ -12,6 +12,13 @@ class AttractionResponse {
     }
 
     attractions = attractionsMap.values.map<Attraction>((item) {
+      List<String>? gallery;
+      if (item['gallery'] != null && item['gallery'] is List) {
+        gallery = (item['gallery'] as List)
+            .map<String>((img) => img != null ? 'http://10.0.2.2:8000$img' : '')
+            .where((img) => img.isNotEmpty)
+            .toList();
+      }
       return Attraction(
         id: item['id'],
         name: item['title'],
@@ -24,6 +31,7 @@ class AttractionResponse {
         type: item['category'],
         date: item['duration'],
         mapImage: item['mapImage'],
+        gallery: gallery,
       );
     }).toList();
   }
