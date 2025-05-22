@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/widgets/map_tooltip.dart';
 import '../../controllers/attractions_controller.dart';
-import '../models/attraction.dart';
 import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import 'package:getx_practice/utils/location_utils.dart';
 import 'package:getx_practice/utils/slugify.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class AttractionDetailsScreen extends StatelessWidget {
@@ -34,25 +33,32 @@ class AttractionDetailsScreen extends StatelessWidget {
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
-                child: Image.network(
-                  attraction.image ?? '',
-                  height: 280,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder:
-                      (context, error, stackTrace) => Container(
-                        height: 280,
-                        width: double.infinity,
-                        color: progressBackground,
-                        child:  Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            size: 50,
-                            color: secondary,
-                          ),
+                child:
+                  CachedNetworkImage(
+                    imageUrl: attraction.image ?? '',
+                    height: 280,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      height: 280,
+                      width: double.infinity,
+                      color: progressBackground,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 280,
+                      width: double.infinity,
+                      color: progressBackground,
+                      child: Center(
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: secondary,
                         ),
                       ),
-                ),
+                    ),
+                  )
+
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
