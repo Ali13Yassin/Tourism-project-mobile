@@ -96,6 +96,15 @@ class AttractionsController extends GetxController {
 
   var articles = <Article>[].obs;
 
+  List<Article> get filteredArticles {
+  if (searchQuery.isEmpty) return articles;
+
+  return articles.where((article) {
+    final q = searchQuery.value;
+    return article.title.toLowerCase().contains(q);
+  }).toList();
+}
+
   Future<void> fetchArticles() async {
     try {
       isLoading(true);

@@ -205,7 +205,7 @@ return Scaffold(
   }
 
   Widget _buildArticles(AttractionsController controller) {
-  final articleList = controller.articles;
+  final articleList = controller.filteredArticles;
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
@@ -216,10 +216,12 @@ return Scaffold(
           'Latest Articles',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 10),
         if (articleList.isEmpty)
           Center(
             child: Column(
               children: [
+                const Text('No articles found.'),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => controller.fetchArticles(),
@@ -238,8 +240,7 @@ return Scaffold(
               childAspectRatio: 0.47,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-          ),
-
+            ),
             itemBuilder: (context, index) {
               final article = articleList[index];
               return GestureDetector(
@@ -257,5 +258,7 @@ return Scaffold(
       ],
     ),
   );
+
+
 }
 }
