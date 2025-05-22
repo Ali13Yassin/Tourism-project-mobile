@@ -61,7 +61,9 @@ class AttractionDetailsScreen extends StatelessWidget {
                   backgroundColor: icons,
                   child: IconButton(
                     icon:  Icon(Icons.arrow_back, color: primary),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
                 ),
               ),

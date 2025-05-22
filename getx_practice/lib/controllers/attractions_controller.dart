@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:getx_practice/models/article.dart';
 import '../models/attraction.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
@@ -33,6 +34,7 @@ class AttractionsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAttractions();
+    fetchArticles();
   }
 
   Future<void> fetchAttractions() async {
@@ -90,5 +92,20 @@ class AttractionsController extends GetxController {
 
   void exploreAttraction(String name) {
     Get.snackbar('Explore', 'Exploring $name');
+  }
+
+  var articles = <Article>[].obs;
+
+  Future<void> fetchArticles() async {
+    try {
+      isLoading(true);
+      final response = await Api.getAllArticles(); // implement this endpoint
+      final dataList = response.data['data'] as List;
+      articles.value = dataList.map((json) => Article.fromJson(json)).toList();
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load articles');
+    } finally {
+      isLoading(false);
+    }
   }
 }

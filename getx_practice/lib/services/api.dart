@@ -75,4 +75,13 @@ static void intializeinterceptors() {
     return dio.get('/api/attractions/$slug/reviews');
   }
 
+  static Future<Response> getArticleById(int id) async {
+    return dio.get('/api/articles/$id');
+  }
+
+  static Future<Response> getAllArticles() async {
+  return dio.get('/api/articles');
+}
+
+
 }
