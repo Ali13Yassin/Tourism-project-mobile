@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../controllers/articles_controller.dart';
 import 'package:getx_practice/Styles/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ArticleDetailsScreen extends StatelessWidget {
   final int articleId;
 
   const ArticleDetailsScreen({super.key, required this.articleId});
-    String formatDate(String inputDate) {
+
+  String formatDate(String inputDate) {
     try {
       final parsedDate = DateTime.parse(inputDate);
       return DateFormat('MMMM d, y').format(parsedDate); // e.g., May 21, 2025
@@ -21,7 +23,10 @@ class ArticleDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ArticlesController());
 
-    controller.fetchArticle(articleId);
+    // Avoid refetching if already loaded
+    if (controller.article.value?.id != articleId) {
+      controller.fetchArticle(articleId);
+    }
 
     return Scaffold(
       backgroundColor: background,
@@ -36,9 +41,10 @@ class ArticleDetailsScreen extends StatelessWidget {
           return const Center(child: Text('Article not found.'));
         }
 
+
         return Column(
           children: [
-            // Top Image Section with Stack
+            // Top Image Section
             Stack(
               children: [
                 ClipRRect(
@@ -46,24 +52,24 @@ class ArticleDetailsScreen extends StatelessWidget {
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
-                  child: Image.network(
-                    article.image ?? '',
-                    height: 280,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 280,
-                      width: double.infinity,
-                      color: progressBackground,
-                      child: Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 50,
-                          color: secondary,
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: CachedNetworkImage(
+  imageUrl: article.image ?? 'https://via.placeholder.com/600x280.png?text=No+Image',
+  placeholder: (context, url) => const SizedBox(
+    height: 280,
+    child: Center(child: CircularProgressIndicator()),
+  ),
+  errorWidget: (context, url, error) => const SizedBox(
+    height: 280,
+    child: Center(child: Icon(Icons.broken_image, size: 40)),
+  ),
+  height: 280,
+  width: double.infinity,
+  fit: BoxFit.cover,
+  fadeInDuration: const Duration(milliseconds: 300),
+  fadeOutDuration: const Duration(milliseconds: 300),
+  maxWidthDiskCache: 400,
+),
+
                 ),
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 8,
@@ -72,9 +78,7 @@ class ArticleDetailsScreen extends StatelessWidget {
                     backgroundColor: icons,
                     child: IconButton(
                       icon: Icon(Icons.arrow_back, color: primary),
-                      onPressed: () {
-                        Get.back();
-                      },
+                      onPressed: () => Get.back(),
                     ),
                   ),
                 ),
@@ -97,19 +101,16 @@ class ArticleDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Date
                       if (article.createdAt != null)
                         Text(
                           'Published: ${formatDate(article.createdAt!)}',
-                          style:  TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: text,
                           ),
                         ),
                       const SizedBox(height: 6),
-
-                      // Title
                       Text(
                         article.title,
                         style: TextStyle(
@@ -119,8 +120,6 @@ class ArticleDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Body
                       Text(
                         article.body,
                         style: TextStyle(

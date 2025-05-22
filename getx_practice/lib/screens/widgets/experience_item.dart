@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:getx_practice/Styles/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ExperienceItem extends StatelessWidget {
   final String image;
@@ -28,6 +29,8 @@ class ExperienceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = image.isNotEmpty ? image : defaultImage;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -35,55 +38,30 @@ class ExperienceItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          image.isNotEmpty
-              ? Image.network(
-                  image,
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      defaultImage,
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 180,
-                          width: double.infinity,
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                )
-              : Image.network(
-                  defaultImage,
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 180,
-                      width: double.infinity,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    );
-                  },
+          CachedNetworkImage(
+            imageUrl: imageUrl,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => Container(
+              height: 180,
+              width: double.infinity,
+              color: Colors.grey[200],
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: 180,
+              width: double.infinity,
+              color: Colors.grey[300],
+              child: const Center(
+                child: Icon(
+                  Icons.image_not_supported,
+                  size: 50,
+                  color: Colors.grey,
                 ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -109,7 +87,7 @@ class ExperienceItem extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    'Published •                  ${formatDate(date)}',
+                    'Published •                 ${formatDate(date)}',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
