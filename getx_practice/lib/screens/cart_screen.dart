@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:getx_practice/Styles/colors.dart';
-import '../../Styles/colors.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});

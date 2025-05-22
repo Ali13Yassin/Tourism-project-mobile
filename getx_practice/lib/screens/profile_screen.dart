@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getx_practice/models/attraction.dart';
 import 'package:getx_practice/screens/attractions_screen.dart';
 import 'widgets/profile_option.dart';
 import 'package:get/get.dart';
