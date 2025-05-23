@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx_practice/controllers/auth_controller.dart';
 import 'package:getx_practice/screens/attractions_screen.dart';
 import 'widgets/profile_option.dart';
-import 'package:get/get.dart';
 import 'package:getx_practice/Styles/colors.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+    final user = authController.user.value;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Get.to(AttractionsScreen());
+            Get.to(() => const AttractionsScreen());
           },
-          icon: Icon(Icons.arrow_back, size: 33, color: const Color.fromARGB(255, 0, 0, 0)),
+          icon: const Icon(Icons.arrow_back, size: 33, color: Colors.black),
         ),
         centerTitle: true,
       ),
@@ -22,28 +27,42 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 30),
-            // Profile Picture and Name
             Center(
               child: Column(
-                children:[
+                children: [
+                  // Profile circle with first letter of first name
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/taha.jpg'), // Add your image here
+                    backgroundColor: const Color(0xFFD2AC71),
+                    child: Text(
+                      user.firstname.isNotEmpty ? user.firstname[0].toUpperCase() : '?',
+                      style: const TextStyle(
+                        fontSize: 40,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  
+                  // Dynamic name
                   Text(
-                    'Ayman Taha',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    '${user.firstname} ${user.lastname}',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 5),
+
+                  const SizedBox(height: 5),
+
+                  // Dynamic email
                   Text(
-                    'TahaYman@gmail.com',
+                    user.email,
                     style: TextStyle(color: secondary),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 30),
+
             // Profile Options
             Card(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -70,4 +89,3 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
