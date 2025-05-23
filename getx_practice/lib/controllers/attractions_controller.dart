@@ -56,22 +56,20 @@ class AttractionsController extends GetxController {
     var filtered = attractionsList.toList();
 
     if (selectedFilterIndex.value != 0) {
-      final selectedCategory = filterOptions[selectedFilterIndex.value];
-      filtered =
-          filtered
-              .where((attraction) => attraction.type == selectedCategory)
-              .toList();
+      final selectedCategory = filterOptions[selectedFilterIndex.value].toLowerCase();
+      filtered = filtered
+          .where((attraction) =>
+              (attraction.type ?? '').toLowerCase() == selectedCategory)
+          .toList();
     }
 
     if (searchQuery.value.isNotEmpty) {
       final query = searchQuery.value.toLowerCase();
-      filtered =
-          filtered.where((attraction) {
-            return attraction.name.toLowerCase().contains(query) ||
-                (attraction.location?.toLowerCase().contains(query) ?? false) ||
-                (attraction.description?.toLowerCase().contains(query) ??
-                    false);
-          }).toList();
+      filtered = filtered.where((attraction) {
+        return attraction.name.toLowerCase().contains(query) ||
+            (attraction.location?.toLowerCase().contains(query) ?? false) ||
+            (attraction.description?.toLowerCase().contains(query) ?? false);
+      }).toList();
     }
 
     return filtered;

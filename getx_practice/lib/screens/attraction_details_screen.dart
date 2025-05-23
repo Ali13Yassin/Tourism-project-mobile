@@ -118,7 +118,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       Text(
                         attraction.type!,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Color.fromARGB(255, 210, 172, 113),
                         ),
