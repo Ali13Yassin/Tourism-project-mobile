@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:getx_practice/models/article.dart';
 import '../models/attraction.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
@@ -33,6 +34,7 @@ class AttractionsController extends GetxController {
   void onInit() {
     super.onInit();
     fetchAttractions();
+    fetchArticles();
   }
 
   Future<void> fetchAttractions() async {
@@ -54,22 +56,20 @@ class AttractionsController extends GetxController {
     var filtered = attractionsList.toList();
 
     if (selectedFilterIndex.value != 0) {
-      final selectedCategory = filterOptions[selectedFilterIndex.value];
-      filtered =
-          filtered
-              .where((attraction) => attraction.type == selectedCategory)
-              .toList();
+      final selectedCategory = filterOptions[selectedFilterIndex.value].toLowerCase();
+      filtered = filtered
+          .where((attraction) =>
+              (attraction.type ?? '').toLowerCase() == selectedCategory)
+          .toList();
     }
 
     if (searchQuery.value.isNotEmpty) {
       final query = searchQuery.value.toLowerCase();
-      filtered =
-          filtered.where((attraction) {
-            return attraction.name.toLowerCase().contains(query) ||
-                (attraction.location?.toLowerCase().contains(query) ?? false) ||
-                (attraction.description?.toLowerCase().contains(query) ??
-                    false);
-          }).toList();
+      filtered = filtered.where((attraction) {
+        return attraction.name.toLowerCase().contains(query) ||
+            (attraction.location?.toLowerCase().contains(query) ?? false) ||
+            (attraction.description?.toLowerCase().contains(query) ?? false);
+      }).toList();
     }
 
     return filtered;
@@ -90,5 +90,29 @@ class AttractionsController extends GetxController {
 
   void exploreAttraction(String name) {
     Get.snackbar('Explore', 'Exploring $name');
+  }
+
+  var articles = <Article>[].obs;
+
+  List<Article> get filteredArticles {
+  if (searchQuery.isEmpty) return articles;
+
+  return articles.where((article) {
+    final q = searchQuery.value;
+    return article.title.toLowerCase().contains(q);
+  }).toList();
+}
+
+  Future<void> fetchArticles() async {
+    try {
+      isLoading(true);
+      final response = await Api.getAllArticles(); // implement this endpoint
+      final dataList = response.data['data'] as List;
+      articles.value = dataList.map((json) => Article.fromJson(json)).toList();
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load articles');
+    } finally {
+      isLoading(false);
+    }
   }
 }

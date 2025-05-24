@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_practice/screens/cart_screen.dart';
+import 'package:getx_practice/screens/article_details_screen.dart';
 import 'package:getx_practice/screens/profile_screen.dart';
 import '../../controllers/attractions_controller.dart';
 import 'widgets/destination_card.dart';
@@ -20,6 +20,7 @@ class AttractionsScreen extends StatelessWidget {
       Get.put(AttractionsController());
     }
     final controller = Get.find<AttractionsController>();
+    
 
 return Scaffold(
       backgroundColor: background,
@@ -127,7 +128,7 @@ return Scaffold(
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-           Text(
+          Text(
             'For those seeking a new, responsible way to travel',
             style: TextStyle(fontSize: 14, color: primary),
           ),
@@ -205,57 +206,60 @@ return Scaffold(
   }
 
   Widget _buildArticles(AttractionsController controller) {
-    final filteredAttractions = controller.filteredAttractions;
+  final articleList = controller.filteredArticles;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Latest Articles',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 0),
-          if (filteredAttractions.isEmpty) //TODO: Update search
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    controller.selectedFilterIndex.value == 0
-                        ? 'No attractions found'
-                        : 'No attractions found for ${controller.filterOptions[controller.selectedFilterIndex.value]}',
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => controller.fetchAttractions(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            )
-          else
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: filteredAttractions.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 0.75,
-              ),
-              itemBuilder: (context, index) {
-                final attraction = filteredAttractions[index];
-                return ExperienceItem(
-                  image: attraction.image ?? '',
-                  title: attraction.name,
-                  date: attraction.date ?? attraction.description ?? 'No description',
-                );
-              },
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Latest Articles',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        if (articleList.isEmpty)
+          Center(
+            child: Column(
+              children: [
+                const Text('No articles found.'),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () => controller.fetchArticles(),
+                  child: const Text('Retry'),
+                ),
+              ],
             ),
-        ],
-      ),
-    );
-  }
+          )
+        else
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: articleList.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.47,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemBuilder: (context, index) {
+              final article = articleList[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.to(() => ArticleDetailsScreen(articleId: article.id));
+                },
+                child: ExperienceItem(
+                  image: article.image ?? '',
+                  title: article.title,
+                  date: article.createdAt ?? '',
+                ),
+              );
+            },
+          ),
+      ],
+    ),
+  );
+
+
+}
 }
