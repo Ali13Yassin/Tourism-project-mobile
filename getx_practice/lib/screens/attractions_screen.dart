@@ -157,38 +157,69 @@ return Scaffold(
     );
   }
 
-  Widget _buildTopAttractions(AttractionsController controller) {
-    final filteredAttractions = controller.filteredAttractions;
+ Widget _buildTopAttractions(AttractionsController controller) {
+  final filteredAttractions = controller.filteredAttractions;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Top Attractions',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          if (filteredAttractions.isEmpty)
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    controller.selectedFilterIndex.value == 0
-                        ? 'No attractions found'
-                        : 'No attractions found for ${controller.filterOptions[controller.selectedFilterIndex.value]}',
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => controller.fetchAttractions(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            )
-          else
-            ...filteredAttractions.map((attraction) => Padding(
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Top Attractions',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+
+        // Expanded to allow ListView inside Column
+        Expanded(
+          child: Obx(() {
+            if (controller.isLoading.value && controller.attractionsList.isEmpty) {
+// Initial loading
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (filteredAttractions.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      controller.selectedFilterIndex.value == 0
+                          ? 'No attractions found'
+                          : 'No attractions found for ${controller.filterOptions[controller.selectedFilterIndex.value]}',
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () => controller.fetchAttractions(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return ListView.builder(
+              controller: controller.scrollController,
+              itemCount: filteredAttractions.length + 1,
+              itemBuilder: (context, index) {
+                if (index == filteredAttractions.length) {
+                  // End of the list - show a loading indicator or a "No more items" message
+                    if (controller.currentPage > controller.lastPage) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: Text('No more attractions')),
+                    );
+                  } else {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                }
+
+                final attraction = filteredAttractions[index];
+                return Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: DestinationCard(
                     image: attraction.image ?? '',
@@ -196,14 +227,20 @@ return Scaffold(
                     price: attraction.price ?? 'Free',
                     type: attraction.type ?? attraction.location ?? 'Unknown',
                     onExplore: () {
-                      Get.to(AttractionDetailsScreen(attractionName: attraction.name));
+                      Get.to(() => AttractionDetailsScreen(attractionName: attraction.name));
                     },
                   ),
-                )),
-        ],
-      ),
-    );
-  }
+                );
+              },
+            );
+          }),
+        ),
+      ],
+    ),
+  );
+}
+
+
 
   Widget _buildArticles(AttractionsController controller) {
   final articleList = controller.filteredArticles;

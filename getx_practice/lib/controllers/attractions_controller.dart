@@ -1,49 +1,82 @@
 import 'package:get/get.dart';
-import 'package:getx_practice/models/article.dart';
+import 'package:flutter/material.dart';
+import '../models/article.dart';
 import '../models/attraction.dart';
 import '../services/api.dart';
 import '../responses/attraction_response.dart';
 import '../screens/cart_screen.dart';
-import 'package:getx_practice/screens/attractions_screen.dart';
+import '../screens/attractions_screen.dart';
 import '../screens/tickets_list_screen.dart';
 
 class AttractionsController extends GetxController {
+  final currentNavIndex = 0.obs;
+  final selectedFilterIndex = 0.obs;
+  final filterOptions = ['All', 'Historical', 'Natural', 'Entertainment'];
+  final searchQuery = ''.obs;
+
+  var attractionsList = <Attraction>[].obs;
+  var articles = <Article>[].obs;
+  var isLoading = false.obs;
+
+  // Pagination variables
+  int currentPage = 1;
+  int lastPage = 1;
+
+  // ScrollController for ListView pagination
+  late ScrollController scrollController;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 300) {
+        // Load more attractions when near bottom
+        fetchAttractions(loadMore: true);
+      }
+    });
+
+    fetchAttractions();
+    fetchArticles();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
   void changeNavIndex(int index) {
     currentNavIndex.value = index;
     if (index == 3) {
-      Get.to(() => CartScreen()); // Example navigation
+      Get.to(() => CartScreen());
     } else if (index == 2) {
       Get.to(() => TicketsListScreen());
     } else if (index == 0) {
       Get.to(() => AttractionsScreen());
     } else if (index == 1) {
-      //
+      // Future option
     }
   }
 
-  final currentNavIndex = 0.obs;
-  final selectedFilterIndex = 0.obs;
-  final filterOptions = ['All', 'Historical', 'Natural', 'Entertainment'];
+  Future<void> fetchAttractions({bool loadMore = false}) async {
+    if (loadMore && currentPage > lastPage) return;
 
-  var attractionsList = <Attraction>[].obs;
-  var isLoading = false.obs;
-
-  final searchQuery = ''.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchAttractions();
-    fetchArticles();
-  }
-
-  Future<void> fetchAttractions() async {
     try {
       isLoading(true);
-      final response = await Api.getAttractions();
-      print('Raw API Response: ${response.data}');
+      final response = await Api.getAttractions(page: currentPage);
       final attractionResponse = AttractionResponse.fromJson(response.data);
-      attractionsList.value = attractionResponse.attractions;
+
+      if (loadMore) {
+        attractionsList.addAll(attractionResponse.attractions);
+      } else {
+        attractionsList.value = attractionResponse.attractions;
+      }
+
+      currentPage = attractionResponse.currentPage + 1;
+      lastPage = attractionResponse.lastPage;
     } catch (e) {
       Get.snackbar('Error', e.toString());
       print('Exception: $e');
@@ -57,10 +90,8 @@ class AttractionsController extends GetxController {
 
     if (selectedFilterIndex.value != 0) {
       final selectedCategory = filterOptions[selectedFilterIndex.value].toLowerCase();
-      filtered = filtered
-          .where((attraction) =>
-              (attraction.type ?? '').toLowerCase() == selectedCategory)
-          .toList();
+      filtered = filtered.where((attraction) =>
+          (attraction.type ?? '').toLowerCase() == selectedCategory).toList();
     }
 
     if (searchQuery.value.isNotEmpty) {
@@ -92,25 +123,25 @@ class AttractionsController extends GetxController {
     Get.snackbar('Explore', 'Exploring $name');
   }
 
-  var articles = <Article>[].obs;
-
+  // Articles section
   List<Article> get filteredArticles {
-  if (searchQuery.isEmpty) return articles;
+    if (searchQuery.value.isEmpty) return articles;
 
-  return articles.where((article) {
-    final q = searchQuery.value;
-    return article.title.toLowerCase().contains(q);
-  }).toList();
-}
+    final query = searchQuery.value.toLowerCase();
+    return articles.where((article) {
+      return article.title.toLowerCase().contains(query);
+    }).toList();
+  }
 
   Future<void> fetchArticles() async {
     try {
       isLoading(true);
-      final response = await Api.getAllArticles(); // implement this endpoint
+      final response = await Api.getAllArticles(); 
       final dataList = response.data['data'] as List;
       articles.value = dataList.map((json) => Article.fromJson(json)).toList();
     } catch (e) {
       Get.snackbar('Error', 'Failed to load articles');
+      print('Articles fetch error: $e');
     } finally {
       isLoading(false);
     }
