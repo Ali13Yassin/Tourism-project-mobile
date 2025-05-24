@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/widgets/map_tooltip.dart';
 import '../../controllers/attractions_controller.dart';
-import '../models/attraction.dart';
 import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import 'package:getx_practice/utils/location_utils.dart';
 import 'package:getx_practice/utils/slugify.dart';
 import 'package:getx_practice/screens/widgets/image_gallery_slider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class AttractionDetailsScreen extends StatelessWidget {
@@ -36,6 +35,37 @@ class AttractionDetailsScreen extends StatelessWidget {
                     : (attraction.image != null ? [attraction.image!] : []),
                 height: 280,
                 borderRadius: 20,
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+                child:
+                  CachedNetworkImage(
+                    imageUrl: attraction.image ?? '',
+                    height: 280,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      height: 280,
+                      width: double.infinity,
+                      color: progressBackground,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 280,
+                      width: double.infinity,
+                      color: progressBackground,
+                      child: Center(
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: secondary,
+                        ),
+                      ),
+                    ),
+                  )
+
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
@@ -44,7 +74,9 @@ class AttractionDetailsScreen extends StatelessWidget {
                   backgroundColor: icons,
                   child: IconButton(
                     icon:  Icon(Icons.arrow_back, color: primary),
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      Get.back();
+                    },
                   ),
                 ),
               ),
@@ -93,7 +125,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                       Text(
                         attraction.type!,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Color.fromARGB(255, 210, 172, 113),
                         ),
