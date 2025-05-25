@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/ticket_details_screen.dart';
-import '../../controllers/attractions_controller.dart';
+import '../controllers/attractions_controller.dart';
+import '../controllers/ticket_controller.dart';
 import '../Styles/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 // Renamed class to match the file purpose
 class TicketsListScreen extends StatelessWidget {
   TicketsListScreen({super.key});
 
   final controller = Get.find<AttractionsController>(); //Used for navbar
+  final ticketController = Get.put(TicketController());
 
   @override
   Widget build(BuildContext context) {
@@ -50,27 +53,49 @@ class TicketsListScreen extends StatelessWidget {
                           ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 20),
+                ),                const SizedBox(height: 20),
 
                 // Ticket Items
-                _buildTicketItem(
-                  context,
-                  // Use a placeholder or actual asset path
-                  imageUrl: 'assets/images.jpg',
-                  itemName: 'Karnak Temple',
-                  date: '13/4/2025',
-                  price: '399 LE',
-                ),
-                const SizedBox(height: 5), //Height between items
-                _buildTicketItem(
-                  context,
-                  // Use a placeholder or actual asset path
-                  imageUrl: 'assets/images.jpg',
-                  itemName: 'Karnak Temple', // Mockup shows same item twice
-                  date: '13/4/2025',
-                  price: '399 LE',
-                ),
+                Obx(() {
+                  if (ticketController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (ticketController.tickets.isEmpty) {
+                    return Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.confirmation_num_outlined, 
+                               size: 80, 
+                               color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No tickets yet',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Your tickets will appear here after booking',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      ...ticketController.tickets.map((ticket) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _buildTicketItem(context, ticket),
+                      )).toList(),
+                    ],
+                  );
+                }),
                 // Removed Payment Method and Pay Now sections
               ],
             ),
@@ -79,15 +104,8 @@ class TicketsListScreen extends StatelessWidget {
       ),
     );
   }
-
   // Renamed and modified method to build ticket items
-  Widget _buildTicketItem(
-    BuildContext context, {
-    required String imageUrl,
-    required String itemName,
-    required String date, // Added date parameter
-    required String price,
-  }) {
+  Widget _buildTicketItem(BuildContext context, dynamic ticket) {
     const buttonColor = Color(0xFFD4B98A); // Beige color for buttons
     const buttonTextStyle = TextStyle(fontSize: 12, color: Colors.black);
 
@@ -100,13 +118,31 @@ class TicketsListScreen extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset( // Assuming local asset
-                imageUrl,
-                height: 80, // Adjusted height slightly
-                width: 80,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, size: 60), // Placeholder on error
-              ),
+              child: ticket.image != null
+                ? CachedNetworkImage(
+                    imageUrl: ticket.image!,
+                    height: 80,
+                    width: 80,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      height: 80,
+                      width: 80,
+                      color: progressBackground,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 80,
+                      width: 80,
+                      color: progressBackground,
+                      child: const Icon(Icons.image_not_supported, size: 40),
+                    ),
+                  )
+                : Container(
+                    height: 80,
+                    width: 80,
+                    color: progressBackground,
+                    child: const Icon(Icons.confirmation_num, size: 40),
+                  ),
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -114,53 +150,78 @@ class TicketsListScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    itemName,
+                    ticket.title ?? 'Ticket',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          // fontFamily: 'Serif',
+                          fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 5),
-                  Text(
-                    date, // Display date
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          // fontFamily: 'Serif',
-                          color: primary,
-                        ),
-                  ),
+                  if (ticket.date != null)
+                    Text(
+                      'Date: ${ticket.date}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: primary,
+                          ),
+                    ),
                   const SizedBox(height: 5),
-                  Text(
-                    price,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          // fontFamily: 'Serif',
-                          color: primary,
-                        ),
+                  if (ticket.time != null)
+                    Text(
+                      'Time: ${ticket.time}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: primary,
+                          ),
+                    ),
+                  const SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getStateColor(ticket.state),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      ticket.state.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            // Details and Review Buttons
-                // Details and Review Buttons
-                Column( // Use Column for vertical button arrangement if needed, Row for side-by-side
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        Get.to(() => TicketDetailsScreen());
-                      },
-                      color: buttonColor,
-                      minWidth: 60, // Adjust width
-                      height: 30, // Adjust height
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Text('Details', style: buttonTextStyle),
-                    ),
-                  ],
+            // Details Button
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [                MaterialButton(
+                  onPressed: () {
+                    Get.to(() => TicketDetailsScreen(), arguments: {'ticketId': ticket.ticketUuid});
+                  },
+                  color: buttonColor,
+                  minWidth: 60,
+                  height: 30,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text('Details', style: buttonTextStyle),
                 ),
               ],
             ),
-          ),
-        );
-      }
+          ],
+        ),
+      ),
+    );
+  }  Color _getStateColor(String state) {
+    switch (state.toLowerCase()) {
+      case 'confirmed':
+        return Colors.green;
+      case 'pending':
+        return Colors.orange;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
+  }
+}

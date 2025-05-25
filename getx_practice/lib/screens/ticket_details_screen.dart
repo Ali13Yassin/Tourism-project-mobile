@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Import GetX
-import '../../controllers/attractions_controller.dart';
-import '../../Styles/colors.dart'; // Import your color styles
+import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../controllers/attractions_controller.dart';
+import '../controllers/ticket_controller.dart';
+import '../Styles/colors.dart';
+
 class TicketDetailsScreen extends StatelessWidget {
-  const TicketDetailsScreen({super.key});
+  TicketDetailsScreen({super.key});
+
+  final ticketController = Get.put(TicketController());
+  final controller = Get.find<AttractionsController>();
 
   @override
   Widget build(BuildContext context) {
+    // Get ticket ID from arguments
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final ticketId = arguments?['ticketId'] as String?;
+
+    if (ticketId != null) {
+      // Fetch ticket details when screen loads
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ticketController.fetchTicketDetails(ticketId);
+      });
+    }
+
     // Define text styles for consistency
     final titleStyle = Theme.of(context).textTheme.headlineMedium?.copyWith(
           fontWeight: FontWeight.bold,
@@ -17,109 +34,151 @@ class TicketDetailsScreen extends StatelessWidget {
         );
     final detailStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: primary,
-        );
-    final controller = Get.find<AttractionsController>(); //Used for navbar
-    return Scaffold(
-      // Optional: Add an AppBar if needed
-      // appBar: AppBar(title: const Text('Ticket Details')),
-      backgroundColor: background, // Match background if needed
+        );    return Scaffold(
+      backgroundColor: background,
+      appBar: AppBar(
+        title: const Text('Ticket Details'),
+        backgroundColor: background,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: primary),
+          onPressed: () => Get.back(),
+        ),
+      ),
       body: SafeArea(
-        child: Center( // Center the card on the screen
-          child: Padding(
-            padding: const EdgeInsets.all(20.0), // Padding around the card
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8, // 90% of screen width
-              height: MediaQuery.of(context).size.height * 0.8, // Set a fixed height for the card
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0), // Rounded corners for the card
-              ),
-              color: const Color(0xFFF5F5F5), // Light grey background for the card
-              child: Padding(
-                padding: const EdgeInsets.all(20.0), // Padding inside the card
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // Make card wrap content height
-                  crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
-                  children: [
-                    // Title
-                    Text(
-                      'Karnak Temple',
-                      style: titleStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
+        child: Obx(() {
+          if (ticketController.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                    // Date and Time
-                    Text(
-                      '13/4/2025',
-                      style: subtitleStyle,
-                    ),
-                    Text(
-                      '2 PM',
-                      style: subtitleStyle,
-                    ),
-                    const SizedBox(height: 25),
+          final ticket = ticketController.selectedTicket.value;
+          if (ticket == null) {
+            return const Center(
+              child: Text('Ticket not found'),
+            );
+          }
 
-                    // Placeholder for QR Code/Image
-                    Container(
-                      width: 180, // Adjust size as needed
-                      height: 180, // Adjust size as needed
-                      decoration: BoxDecoration(
-                        color: secondary, // Grey placeholder color
-                        borderRadius: BorderRadius.circular(12.0), // Rounded corners
-                      ),
-                      // In a real app, you might display a QR code here
-                      // child: QrImageView(data: 'Your QR Data'),
-                    ),
-                    const SizedBox(height: 25),
-
-                    // Status Row
-                    Row(
-                      mainAxisSize: MainAxisSize.min, // Row takes minimum width
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  color: const Color(0xFFF5F5F5),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // Title
                         Text(
-                          'Status: Expired',
+                          ticket.title ?? 'Ticket',
+                          style: titleStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Date and Time
+                        Text(
+                          ticket.date ?? 'No date',
+                          style: subtitleStyle,
+                        ),
+                        Text(
+                          ticket.time ?? 'No time',
+                          style: subtitleStyle,
+                        ),
+                        const SizedBox(height: 25),
+
+                        // Attraction Image or QR Code placeholder
+                        Container(
+                          width: 180,
+                          height: 180,
+                          decoration: BoxDecoration(
+                            color: secondary,
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: ticket.image != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl: ticket.image!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Center(
+                                      child: CircularProgressIndicator(color: primary),
+                                    ),
+                                    errorWidget: (context, url, error) => const Icon(
+                                      Icons.confirmation_num,
+                                      size: 80,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.confirmation_num,
+                                  size: 80,
+                                  color: Colors.grey,
+                                ),
+                        ),
+                        const SizedBox(height: 25),                        // Status Row
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Status: ${ticket.state.toUpperCase()}',
+                              style: detailStyle,
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: _getStatusColor(ticket.state),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Ticket Type
+                        Text(
+                          'Ticket type: ${ticket.ticketTypeName ?? 'Standard'}',
                           style: detailStyle,
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          width: 12,
-                          height: 12,
-                          decoration: const BoxDecoration(
-                            color: Colors.cyan, // Blue circle color
-                            shape: BoxShape.circle,
+                        const SizedBox(height: 4),
+
+                        // Quantity
+                        Text(
+                          'Quantity: ${ticket.quantity}',
+                          style: detailStyle,
+                        ),
+                        const SizedBox(height: 4),
+
+                        // Total Cost
+                        Text(
+                          'Total: \$${ticket.totalCost.toStringAsFixed(2)}',
+                          style: detailStyle?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-
-                    // Visit Type
-                    Text(
-                      'Visit type: Guided',
-                      style: detailStyle,
-                    ),
-                    const SizedBox(height: 4),
-
-                    // Ticket Type
-                    Text(
-                      'Ticket type: Adults',
-                      style: detailStyle,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-            )
-          ),
-        
-        ),
-      ),
-        bottomNavigationBar: Obx( // Wrap with Obx for reactivity
+          );
+        }),
+      ),        bottomNavigationBar: Obx(
           () => BottomNavigationBar(
-            currentIndex: controller.currentNavIndex.value, // Use controller's value
-            onTap: controller.changeNavIndex, // Call controller's method on tap
+            currentIndex: controller.currentNavIndex.value,
+            onTap: controller.changeNavIndex,
             backgroundColor: background,
             selectedItemColor: primary,
             unselectedItemColor: progressBackground,
@@ -134,5 +193,20 @@ class TicketDetailsScreen extends StatelessWidget {
           ),
         ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return Colors.green;
+      case 'pending':
+        return Colors.orange;
+      case 'cancelled':
+        return Colors.red;
+      case 'expired':
+        return Colors.grey;
+      default:
+        return Colors.blue;
+    }
   }
 }
