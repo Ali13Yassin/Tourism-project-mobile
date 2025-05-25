@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/controllers/auth_controller.dart';
-import 'package:getx_practice/screens/attractions_screen.dart';
 import 'widgets/profile_option.dart';
 import 'package:getx_practice/Styles/colors.dart';
 

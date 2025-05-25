@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_practice/screens/widgets/map_tooltip.dart';
 import '../../controllers/attractions_controller.dart';
+import '../../controllers/cart_controller.dart';
+import '../../controllers/ticket_controller.dart';
 import 'package:getx_practice/screens/booking_details_screen.dart';
 import 'package:getx_practice/screens/reviews_screen.dart';
 import 'package:getx_practice/Styles/colors.dart';
@@ -18,6 +20,8 @@ class AttractionDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AttractionsController>();
+    final cartController = Get.put(CartController());
+    final ticketController = Get.put(TicketController());
     final attraction = controller.attractionsList.firstWhere(
       (element) => element.name == attractionName,
     );
@@ -197,9 +201,28 @@ class AttractionDetailsScreen extends StatelessWidget {
                     
 
                     SizedBox(
-                      width: double.infinity,
-                      child: Column(
+                      width: double.infinity,                      child: Column(
                         children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              _showAddToCartDialog(context, attraction, cartController, ticketController);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(255, 34, 139, 34),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'Add to Cart',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: icons,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               Get.to(
@@ -223,6 +246,7 @@ class AttractionDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               final slug = slugify(attraction.name);
@@ -251,6 +275,122 @@ class AttractionDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        ],      ),
+    );
+  }
+  void _showAddToCartDialog(BuildContext context, dynamic attraction, CartController cartController, TicketController ticketController) {
+    final TextEditingController quantityController = TextEditingController(text: '1');
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
+    int? selectedTicketTypeId;
+
+    // Initialize cart controller and fetch ticket types
+    cartController.fetchTicketTypes();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add ${attraction.name} to Cart'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Quantity
+              TextField(
+                controller: quantityController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 15),
+              
+              // Date Selection
+              ListTile(
+                title: const Text('Date'),
+                subtitle: Text('${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  );
+                  if (picked != null) {
+                    selectedDate = picked;
+                  }
+                },
+              ),
+              
+              // Time Selection
+              ListTile(
+                title: const Text('Time'),
+                subtitle: Text('${selectedTime.hour}:${selectedTime.minute.toString().padLeft(2, '0')}'),
+                trailing: const Icon(Icons.access_time),
+                onTap: () async {
+                  final TimeOfDay? picked = await showTimePicker(
+                    context: context,
+                    initialTime: selectedTime,
+                  );
+                  if (picked != null) {
+                    selectedTime = picked;
+                  }
+                },
+              ),
+              
+              // Ticket Type Selection
+              Obx(() => cartController.isLoading.value
+                ? const CircularProgressIndicator()
+                : DropdownButtonFormField<int>(
+                    decoration: const InputDecoration(
+                      labelText: 'Ticket Type',
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedTicketTypeId,                    items: cartController.ticketTypes.map((ticketType) {
+                      return DropdownMenuItem<int>(
+                        value: ticketType.id,
+                        child: Text(ticketType.title),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      selectedTicketTypeId = value;
+                    },
+                  ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final quantity = int.tryParse(quantityController.text) ?? 1;
+              
+              if (selectedTicketTypeId == null) {
+                Get.snackbar('Error', 'Please select a ticket type');
+                return;
+              }
+              
+              final dateString = '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
+              final timeString = '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}:00';
+              
+              Get.back();
+              cartController.addToCart(
+                attractionId: attraction.id,
+                date: dateString,
+                time: timeString,
+                quantity: quantity,
+                ticketTypeId: selectedTicketTypeId!,
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: primary),
+            child: const Text('Add to Cart'),
           ),
         ],
       ),
