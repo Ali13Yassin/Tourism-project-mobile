@@ -45,12 +45,6 @@ class TicketController extends GetxController with BaseController {
         throw Exception('Ticket ID is empty');
       }
       
-      // Check if the received ID looks like an integer (attraction ID) instead of UUID
-      final isInteger = int.tryParse(ticketId) != null;
-      if (isInteger) {
-        print('WARNING: Received integer ID ($ticketId) instead of UUID. This might be an attraction ID.');
-      }
-      
       final response = await Api.getTicket(ticketId);
       
       // The API returns a different structure for individual ticket

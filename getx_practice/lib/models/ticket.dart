@@ -74,7 +74,7 @@ class Ticket {
       attraction: _parseInt(json['Attraction'] ?? json['attraction']),
       ticketTypesId: _parseInt(json['TicketTypesId'] ?? json['ticket_types_id']),
       quantity: _parseInt(json['Quantity'] ?? json['quantity']) == 0 ? 1 : _parseInt(json['Quantity'] ?? json['quantity']),
-      bookingTime: json['BookingTime'] != null 
+      bookingTime: json['BookingTime'] != null
           ? DateTime.parse(json['BookingTime']) 
           : json['booking_time'] != null
               ? DateTime.parse(json['booking_time'])
