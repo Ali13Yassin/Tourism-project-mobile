@@ -45,6 +45,7 @@ dependencies:
   url_launcher: ^6.3.1
   flutter_rating_bar: ^4.0.1
   cached_network_image: ^3.3.1
+  mobile_scanner: ^7.0.0
 
 dev_dependencies:
   flutter_test:
