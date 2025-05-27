@@ -18,7 +18,7 @@ class Article {
       id: json['id'],
       title: json['ArticleHeading'],
       body: json['ArticleBody'],
-      image: json['Img'] != null ? 'http://10.0.2.2:8000/storage/${json['Img']}' : null,
+      image: json['Img'] != null ? 'http://192.168.100.13:8000/storage/${json['Img']}' : null,
       createdAt: json['created_at'],
     );
   }

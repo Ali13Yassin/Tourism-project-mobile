@@ -4,6 +4,7 @@ import 'package:getx_practice/controllers/auth_controller.dart';
 import 'widgets/profile_option.dart';
 import 'package:getx_practice/Styles/colors.dart';
 import 'package:getx_practice/screens/attraction_staff/home_screen.dart';
+import 'package:getx_practice/screens/settings/settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -40,10 +41,13 @@ class ProfileScreen extends StatelessWidget {
                             Get.back();
                           },
                         ),
+                      ),                      const Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.settings, color: Colors.grey[700]),
+                        onPressed: () {
+                          Get.to(() => const SettingsScreen());
+                        },
                       ),
-                      const Spacer(),
-                      Icon(Icons.settings, color: Colors.grey[700]),
-                      const SizedBox(width: 8),
                     ],
                   ),
                 ),

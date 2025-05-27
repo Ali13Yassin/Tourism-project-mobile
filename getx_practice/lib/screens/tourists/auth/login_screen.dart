@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:getx_practice/controllers/auth_controller.dart';
 import 'package:getx_practice/screens/tourists/auth/register_screen.dart';
+import 'package:getx_practice/screens/settings/settings_screen.dart';
+import 'package:getx_practice/services/config_service.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,12 +13,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final authController = Get.find<AuthController>();
+  final configService = ConfigService.instance;
   var formkey = GlobalKey<FormState>();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isObsecure = true.obs;
-  Map<String, dynamic> loginData ={};
-  @override
+  Map<String, dynamic> loginData ={};  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 202, 202, 202),
@@ -27,6 +29,101 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  // Settings and Server URL Header
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Settings button and app title
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Massar App',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(210, 172, 113, 1),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Get.to(() => const SettingsScreen());
+                                },
+                                icon: const Icon(
+                                  Icons.settings,
+                                  color: Color.fromRGBO(210, 172, 113, 1),
+                                  size: 28,
+                                ),
+                                tooltip: 'Server Settings',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Server URL indicator
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.dns,
+                                  size: 16,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Server: ',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Obx(() => Text(
+                                    configService.currentServerUrl,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontFamily: 'monospace',
+                                      color: Colors.black87,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => const SettingsScreen());
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(210, 172, 113, 1),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      'Change',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   //Login Screen Header
                   Container(
                     child: Padding(
@@ -36,9 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           //Email, Password and login button form
                           Form(
                             key: formkey,
-                            child: Column(
-                              children: [
-                                SizedBox(height: cons.maxHeight * 0.5),
+                            child: Column(                              children: [
+                                SizedBox(height: cons.maxHeight * 0.3),
                                 //email field
                                 TextFormField(
                                   controller: emailController,

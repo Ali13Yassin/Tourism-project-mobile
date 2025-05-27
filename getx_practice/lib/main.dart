@@ -3,14 +3,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_practice/controllers/auth_controller.dart';
 import 'package:getx_practice/services/api.dart';
-import 'package:getx_practice/screens/attraction_staff/home_screen.dart';
+import 'package:getx_practice/services/config_service.dart';
 import 'package:getx_practice/screens/tourists/auth/login_screen.dart';
 
 void main() async {
   
   WidgetsFlutterBinding.ensureInitialized(); // Avoiding white screen in the beginning
   await GetStorage.init(); // Initialize GetStorage
+  
+  // Initialize ConfigService first
+  Get.put(ConfigService());
+  
+  // Initialize API with configurable URL
+  Api.initializeDio();
   Api.intializeinterceptors(); // Initialize API interceptors
+  
   Get.put(AuthController());
   
   runApp(const MyApp());

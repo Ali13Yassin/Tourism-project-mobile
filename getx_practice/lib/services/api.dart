@@ -3,16 +3,28 @@ import 'package:flutter/material.dart';
 // ignore: library_prefixes
 import 'package:get/get.dart' as GET;
 import 'package:get_storage/get_storage.dart';
+import 'config_service.dart';
 
 
 
 class Api {
-  static final dio = Dio(
-    BaseOptions(
-    baseUrl: 'http://192.168.100.13:8000',
-    receiveDataWhenStatusError: true,
-    ),
-  );
+  static late Dio dio;
+  
+  /// Initialize Dio with configurable base URL
+  static void initializeDio() {
+    final configService = ConfigService.instance;
+    dio = Dio(
+      BaseOptions(
+        baseUrl: configService.currentServerUrl,
+        receiveDataWhenStatusError: true,
+      ),
+    );
+  }
+  
+  /// Update base URL when server URL changes
+  static void updateBaseUrl(String newBaseUrl) {
+    dio.options.baseUrl = newBaseUrl;
+  }
 
 
 static void intializeinterceptors() {
