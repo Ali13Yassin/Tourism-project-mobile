@@ -46,12 +46,12 @@ class TicketController extends GetxController with BaseController {
       }
       
       final response = await Api.getTicket(ticketId);
-      
-      // The API returns a different structure for individual ticket
+        // The API returns a different structure for individual ticket
       final data = response.data['data'] ?? {};
       final ticketData = data['ticket'] ?? {};
       final attractionData = data['attraction'] ?? {};
       final ticketTypeData = data['ticket_type'] ?? {};
+      final qrImageUrl = data['qrImageUrl']; // Extract QR code URL
       
       // Combine the data for the UI
       final combinedData = {
@@ -64,6 +64,7 @@ class TicketController extends GetxController with BaseController {
         'description': attractionData['description'],
         'image': attractionData['image'],
         'ticket_type': ticketTypeData['title'] ?? ticketTypeData['Title'],
+        'qrImageUrl': qrImageUrl, // Add QR code URL to the data
         // Map additional fields properly
         'visit_date': ticketData['VisitDate'] ?? ticketData['visit_date'],
         'time_slot': ticketData['TimeSlot'] ?? ticketData['time_slot'],

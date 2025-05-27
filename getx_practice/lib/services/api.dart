@@ -145,5 +145,22 @@ static void intializeinterceptors() {
   static Future<Response> getTicketTypes() async {
     return dio.get('/api/ticket-types');
   }
+  // QR Code scanning functionality
+  static Future<Response> processQrCode({required String qrCode}) async {
+    return dio.post('/api/qr-scan', data: {
+      'qr_code': qrCode,
+      'timestamp': DateTime.now().toIso8601String(),
+      'device_info': {
+        'platform': 'mobile',
+        'app_version': '1.0.0',
+      }
+    });
+  }
+
+  static Future<Response> validateTicket({required String encryptedData}) async {
+    return dio.post('/api/validate-ticket', data: {
+      'encrypted_data': encryptedData,
+    });
+  }
 
 }

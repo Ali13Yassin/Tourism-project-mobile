@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:getx_practice/controllers/auth_controller.dart';
 import 'widgets/profile_option.dart';
 import 'package:getx_practice/Styles/colors.dart';
+import 'package:getx_practice/screens/attraction_staff/home_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -91,12 +92,17 @@ class ProfileScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   elevation: 2,
                   child: Column(
-                    children: [
-                      const ProfileOption(icon: Icons.bookmark, title: 'Saved Attractions'),
+                    children: [                      const ProfileOption(icon: Icons.bookmark, title: 'Saved Attractions'),
                       const Divider(),
                       const ProfileOption(icon: Icons.history, title: 'Ticket History'),
                       const Divider(),
-                      const ProfileOption(icon: Icons.help, title: 'About Us'),
+                      ProfileOption(
+                        icon: Icons.help, 
+                        title: 'About Us',
+                        onTap: () {
+                          Get.to(() => const HomeScreen());
+                        },
+                      ),
                       const Divider(),
                       ProfileOption(
                         icon: Icons.logout,

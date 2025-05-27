@@ -17,10 +17,10 @@ class Ticket {
   final double? attractionPrice;
   final double? attractionRating;
   final int? reviewCount;
-  final String? attractionDescription;
-  final String? attractionImage;
+  final String? attractionDescription;  final String? attractionImage;
   final String? ticketTypeName;
   final String? uuid; // Add explicit UUID field for ticket identification
+  final String? qrImageUrl; // QR code image URL from backend
 
   // Getter for backwards compatibility
   String? get image => attractionImage;
@@ -47,11 +47,11 @@ class Ticket {
     this.attractionSlug,
     this.attractionPrice,
     this.attractionRating,
-    this.reviewCount,
-    this.attractionDescription,
+    this.reviewCount,    this.attractionDescription,
     this.attractionImage,
     this.ticketTypeName,
     this.uuid,
+    this.qrImageUrl,
   });
   factory Ticket.fromJson(Map<String, dynamic> json) {    print('Ticket JSON data: $json');
     
@@ -88,11 +88,11 @@ class Ticket {
       attractionSlug: json['slug']?.toString(),
       attractionPrice: _parseDouble(json['price']),
       attractionRating: _parseDouble(json['rating']),
-      reviewCount: _parseInt(json['reviewCount']),
-      attractionDescription: json['description']?.toString(),
+      reviewCount: _parseInt(json['reviewCount']),      attractionDescription: json['description']?.toString(),
       attractionImage: json['image']?.toString(),
       ticketTypeName: json['ticket_type']?.toString(),
       uuid: json['uuid']?.toString() ?? json['ticket_uuid']?.toString(), // Parse both uuid and ticket_uuid fields
+      qrImageUrl: json['qrImageUrl']?.toString(), // Extract QR code URL from response
     );
   }
 
