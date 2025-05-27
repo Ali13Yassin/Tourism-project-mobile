@@ -168,10 +168,16 @@ static void intializeinterceptors() {
       }
     });
   }
-
   static Future<Response> validateTicket({required String encryptedData}) async {
     return dio.post('/api/validate-ticket', data: {
       'encrypted_data': encryptedData,
+    });
+  }
+
+  static Future<Response> submitReview(String slug, int rating, String comment) async {
+    return dio.post('/api/attractions/$slug/reviews', data: {
+      'rating': rating,
+      'comment': comment,
     });
   }
 

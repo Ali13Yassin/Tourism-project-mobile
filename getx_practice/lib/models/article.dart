@@ -1,3 +1,5 @@
+import '../services/config_service.dart';
+
 class Article {
   final int id;
   final String title;
@@ -12,13 +14,15 @@ class Article {
     this.image,
     this.createdAt,
   });
-
   factory Article.fromJson(Map<String, dynamic> json) {
+    final configService = ConfigService();
+    final serverUrl = configService.serverUrl;
+    
     return Article(
       id: json['id'],
       title: json['ArticleHeading'],
       body: json['ArticleBody'],
-      image: json['Img'] != null ? 'http://192.168.100.13:8000/storage/${json['Img']}' : null,
+      image: json['Img'] != null ? '$serverUrl/storage/${json['Img']}' : null,
       createdAt: json['created_at'],
     );
   }
