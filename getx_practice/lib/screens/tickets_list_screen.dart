@@ -214,11 +214,15 @@ class TicketsListScreen extends StatelessWidget {
     );
   }  Color _getStateColor(String state) {
     switch (state.toLowerCase()) {
-      case 'confirmed':
+      case 'valid':
         return Colors.green;
+      case 'used':
+        return Colors.grey;
       case 'pending':
         return Colors.orange;
       case 'cancelled':
+        return Colors.red;
+      case 'expired':
         return Colors.red;
       default:
         return Colors.grey;

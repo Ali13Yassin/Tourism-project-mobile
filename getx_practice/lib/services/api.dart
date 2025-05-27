@@ -9,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 class Api {
   static final dio = Dio(
     BaseOptions(
-    baseUrl: 'http://10.0.2.2:8000',
+    baseUrl: 'http://192.168.100.13:8000',
     receiveDataWhenStatusError: true,
     ),
   );
